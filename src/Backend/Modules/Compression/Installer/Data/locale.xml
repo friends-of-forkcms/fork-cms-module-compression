@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale>
+	<Backend>
+		<Compression>
+			<item type="error" name="InvalidApiKey">
+				<translation language="nl"><![CDATA[Dit is een ongeldige API key.]]></translation>
+				<translation language="en"><![CDATA[This is an invalid API-key]]></translation>
+				<translation language="el"><![CDATA[Το κλειδί API δεν είναι έγκυρο]]></translation>
+				<translation language="zh"><![CDATA[这是一个无效的API密钥]]></translation>
+				<translation language="de"><![CDATA[Dies ist kein gültiger API-Key]]></translation>
+			</item>
+			<item type="error" name="NoApiKey">
+				<translation language="nl"><![CDATA[Er is nog geen TinyPNG account gekoppeld.]]></translation>
+				<translation language="en"><![CDATA[There is no link with a TinyPNG account yet.]]></translation>
+				<translation language="it"><![CDATA[Non c'è ancora nessun collegamento ad un account TinyPNG.]]></translation>
+				<translation language="ru"><![CDATA[Нет соединения с аккаунтом TinyPNG.]]></translation>
+				<translation language="zh"><![CDATA[尚未连接到任何TinyPNG帐户]]></translation>
+				<translation language="hu"><![CDATA[Nincs még összekapcsolva a TinyPNG fiókkal.]]></translation>
+				<translation language="fr"><![CDATA[Il n'y a pas encore de lien avec un compte Google.]]></translation>
+				<translation language="de"><![CDATA[Es wurde noch keine Verbindung zu einem Google-Analytics-Konto hergestellt.]]></translation>
+				<translation language="es"><![CDATA[Aún no hay ninguna cuenta TinyPNG vinculada.]]></translation>
+				<translation language="lt"><![CDATA[Nieko nesusieta su TinyPNG paskyra]]></translation>
+				<translation language="sv"><![CDATA[Det finns ingen länk med ett TinyPNG konto än.]]></translation>
+				<translation language="el"><![CDATA[Δεν υπάρχει ακόμη σύνδεση με κάποιον λογαριασμό στο TinyPNG.]]></translation>
+			</item>
+			<item type="label" name="ApiKey">
+				<translation language="nl"><![CDATA[API key]]></translation>
+				<translation language="en"><![CDATA[API key]]></translation>
+				<translation language="hu"><![CDATA[API key]]></translation>
+				<translation language="it"><![CDATA[API key]]></translation>
+				<translation language="ru"><![CDATA[API ключ]]></translation>
+				<translation language="zh"><![CDATA[API key]]></translation>
+				<translation language="de"><![CDATA[API key]]></translation>
+				<translation language="fr"><![CDATA[API key]]></translation>
+				<translation language="es"><![CDATA[API key]]></translation>
+				<translation language="uk"><![CDATA[API key]]></translation>
+				<translation language="lt"><![CDATA[API key]]></translation>
+				<translation language="sv"><![CDATA[API key]]></translation>
+				<translation language="el"><![CDATA[Κλειδί API]]></translation>
+			</item>
+			<item type="label" name="TinyPNGLink">
+				<translation language="nl"><![CDATA[koppeling met TinyPNG]]></translation>
+				<translation language="en"><![CDATA[link to TinyPNG]]></translation>
+				<translation language="it"><![CDATA[collegamento a TinyPNG]]></translation>
+				<translation language="ru"><![CDATA[Соединение с TinyPNG]]></translation>
+				<translation language="zh"><![CDATA[连接到TinyPNG]]></translation>
+				<translation language="hu"><![CDATA[összekötés TinyPNG-szel]]></translation>
+				<translation language="fr"><![CDATA[lien TinyPNG]]></translation>
+				<translation language="de"><![CDATA[Link zu Google-Analytics]]></translation>
+				<translation language="es"><![CDATA[enlace a TinyPNG]]></translation>
+				<translation language="uk"><![CDATA[З'єднання з TinyPNG]]></translation>
+				<translation language="sv"><![CDATA[länk till TinyPNG]]></translation>
+				<translation language="lt"><![CDATA[nurodo į TinyPNG]]></translation>
+				<translation language="el"><![CDATA[Σύνδεση με το TinyPNG]]></translation>
+			</item>
+			<item type="label" name="WatchFolders">
+				<translation language="nl"><![CDATA[Mappen in de gaten houden]]></translation>
+				<translation language="en"><![CDATA[Folders to watch]]></translation>
+			</item>
+			<item type="message" name="AuthenticateAtTinyPNG">
+				<translation language="nl"><![CDATA[Koppel uw TinyPNG account]]></translation>
+				<translation language="en"><![CDATA[Link your TinyPNG account]]></translation>
+				<translation language="it"><![CDATA[Collega il tuo account TinyPNG]]></translation>
+				<translation language="ru"><![CDATA[Подключение к профилю TinyPNG.]]></translation>
+				<translation language="zh"><![CDATA[链接你的TinyPNG帐户]]></translation>
+				<translation language="de"><![CDATA[Verbinde dein TinyPNG-Konto]]></translation>
+				<translation language="hu"><![CDATA[Összeköttetés a TinyPNG fiókoddal.]]></translation>
+				<translation language="fr"><![CDATA[lier votre compte TinyPNG]]></translation>
+				<translation language="es"><![CDATA[Vincular tu cuenta TinyPNG]]></translation>
+				<translation language="uk"><![CDATA[Підключення до профіля TinyPNG]]></translation>
+				<translation language="sv"><![CDATA[Länk ditt TinyPNG konto]]></translation>
+				<translation language="el"><![CDATA[Σύνδεσε το λογαριασμό σου στο TinyPNG]]></translation>
+			</item>
+			<item type="message" name="LinkTinyPNGAccount">
+				<translation language="nl"><![CDATA[Koppel uw TinyPNG account aan Fork CMS. <br /><br />Een API key kan je verkrijgen op <a href="https://tinypng.com/developers">TinyPNG API's console</a>.<br />]]></translation>
+				<translation language="en"><![CDATA[Link your TinyPNG account to Fork CMS. <br /><br />An API key can be requested on <a href="https://tinypng.com/developers">TinyPNG API's console</a>.<br />]]></translation>
+				<translation language="it"><![CDATA[Collega il tuo account TinyPNG a Fork CMS.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="ru"><![CDATA[Подключите профиль TinyPNG.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="zh"><![CDATA[连接你的谷歌帐户到Fork CMS.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="hu"><![CDATA[TinyPNG fiók összekötése a Fork CMS-ből.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="fr"><![CDATA[Lier votre compte TinyPNG à Fork CMS.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="de"><![CDATA[Verbinde dein TinyPNG-Konto mit Fork CMS.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="es"><![CDATA[Vincula tu cuenta TinyPNG a Fork CMS.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="sv"><![CDATA[Länka ditt TinyPNG konto till Fork CMS.<br /><br /><a href="https://tinypng.com/developers">Request API key on TinyPNG API's console</a>.]]></translation>
+				<translation language="el"><![CDATA[Συνδέστε το λογαρισμό σας στο TinyPNG με το Fork CMS. <br /><br />Μπορείτε να αιτηθείτε ένα κλειδί API στο <a href="https://tinypng.com/developers">κονσόλα TinyPNG API</a>]]></translation>
+			</item>
+			<item type="message" name="RemoveAccountLink">
+				<translation language="nl"><![CDATA[Verwijder de koppeling met uw TinyPNG account]]></translation>
+				<translation language="en"><![CDATA[Remove the link with your TinyPNG account]]></translation>
+				<translation language="it"><![CDATA[Rimuovi il collegamento con il tuo account TinyPNG]]></translation>
+				<translation language="ru"><![CDATA[Удалить соединением с профилем  TinyPNG.]]></translation>
+				<translation language="zh"><![CDATA[移除与TinyPNG帐户的连接]]></translation>
+				<translation language="hu"><![CDATA[Kapcsolat törlése a TinyPNG fiókoddal]]></translation>
+				<translation language="fr"><![CDATA[Retirer le lien avec votre compte TinyPNG]]></translation>
+				<translation language="de"><![CDATA[Entferne die Verbindung zu deinem TinyPNG-Konto.]]></translation>
+				<translation language="es"><![CDATA[Eliminar el vinculo con tu cuenta TinyPNG]]></translation>
+				<translation language="sv"><![CDATA[Ta bort länken med ditt TinyPNG konto]]></translation>
+				<translation language="el"><![CDATA[Αφαιρέσατε το σύνδεσμο προς το λογαριασμό σας στο TinyPNG]]></translation>
+			</item>
+			<item type="message" name="RemoveAccountLink">
+				<translation language="nl"><![CDATA[Verwijder de koppeling met uw TinyPNG account]]></translation>
+				<translation language="en"><![CDATA[Remove the link with your TinyPNG account]]></translation>
+				<translation language="it"><![CDATA[Rimuovi il collegamento con il tuo account TinyPNG]]></translation>
+				<translation language="ru"><![CDATA[Удалить соединением с профилем  TinyPNG.]]></translation>
+				<translation language="zh"><![CDATA[移除与TinyPNG帐户的连接]]></translation>
+				<translation language="hu"><![CDATA[Kapcsolat törlése a TinyPNG fiókoddal]]></translation>
+				<translation language="fr"><![CDATA[Retirer le lien avec votre compte TinyPNG]]></translation>
+				<translation language="de"><![CDATA[Entferne die Verbindung zu deinem TinyPNG-Konto.]]></translation>
+				<translation language="es"><![CDATA[Eliminar el vinculo con tu cuenta TinyPNG]]></translation>
+				<translation language="sv"><![CDATA[Ta bort länken med ditt TinyPNG konto]]></translation>
+				<translation language="el"><![CDATA[Αφαιρέσατε το σύνδεσμο προς το λογαριασμό σας στο TinyPNG]]></translation>
+			</item>
+			<item type="message" name="ConfirmDeleteLinkAccount">
+				<translation language="nl"><![CDATA[Weet u zeker dat u de koppeling met uw account wilt verwijderen?]]></translation>
+				<translation language="en"><![CDATA[Are you sure you want to remove the link with your account?]]></translation>
+				<translation language="it"><![CDATA[Sei sicuro di voler rimuovere il collegamento con l'account?]]></translation>
+				<translation language="ru"><![CDATA[Вы действительно хотите удалить?]]></translation>
+				<translation language="zh"><![CDATA[你确定要移除与帐户“%1$s”的连接吗]]></translation>
+				<translation language="hu"><![CDATA[Biztos meg akarod szüntetni az összekötést a fiókoddal?]]></translation>
+				<translation language="fr"><![CDATA[Etes-vous sûr de vouloir supprimer le lien avec le compte?]]></translation>
+				<translation language="de"><![CDATA[Bist du sicher, dass du die Verbindung zum Konto wirklich entfernen möchtest? ]]></translation>
+				<translation language="es"><![CDATA[¿Estás seguro de eliminar el vinculo con la cuenta?]]></translation>
+				<translation language="sv"><![CDATA[Är du säker du vill till ta bort länken med the konto?]]></translation>
+				<translation language="el"><![CDATA[Σίγουρα θέλετε να αφαιρέσετε το σύνδεσμο με το λογαριασμό;]]></translation>
+			</item>
+		</Compression>
+		<Core>
+			<item type="label" name="Compression">
+				<translation language="nl"><![CDATA[Compressie]]></translation>
+				<translation language="en"><![CDATA[Compression]]></translation>
+			</item>
+		</Core>
+	</Backend>
+	<Frontend>
+		<Core>
+
+		</Core>
+	</Frontend>
+</locale>

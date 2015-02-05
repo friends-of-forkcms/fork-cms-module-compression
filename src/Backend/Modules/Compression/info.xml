@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>Compression</name>
+	<version>1.0.0</version>
+	<requirements>
+		<minimum_version>versionname</minimum_version>
+	</requirements>
+	<description>
+		<![CDATA[Compression module to compress images]]>
+	</description>
+	<authors>
+		<author>
+			<name><![CDATA[Jesse Dobbelaere]]></name>
+			<url><![CDATA[http://www.jessedobbelae.re]]></url>
+		</author>
+	</authors>
+	<events>
+	</events>
+</module>

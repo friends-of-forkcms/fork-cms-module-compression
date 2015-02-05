@@ -47,7 +47,7 @@
 {form:compressionSettings}
 	<div class="box">
 		<div class="heading">
-			<h3>{$lblSettings|ucfirst}</h3>
+			<h3>{$lblFoldersToCompress|ucfirst}</h3>
 		</div>
 
 		<div class="options jstree-wrapper">

@@ -34,6 +34,17 @@ jsBackend.compression =
 			jsBackend.compression.save($allFolders);
 		});
 
+		// Load checkboxes that have class "checked" on page load
+		$.each($('#jstree-folders').jstree(true)._model.data, function(i, value) {
+			$this = $(this);
+
+			if ($this.prop("li_attr")) {
+				var $listAttribute = $this[0].li_attr;
+				if ($listAttribute.class) {
+					$tree.jstree(true).select_node(i);
+				}
+			}
+		});
 	},
 
 	/**

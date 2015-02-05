@@ -53,9 +53,9 @@
 				<translation language="lt"><![CDATA[nurodo į TinyPNG]]></translation>
 				<translation language="el"><![CDATA[Σύνδεση με το TinyPNG]]></translation>
 			</item>
-			<item type="label" name="WatchFolders">
-				<translation language="nl"><![CDATA[Mappen in de gaten houden]]></translation>
-				<translation language="en"><![CDATA[Folders to watch]]></translation>
+			<item type="label" name="FoldersToCompress">
+				<translation language="nl"><![CDATA[Kies de mappen]]></translation>
+				<translation language="en"><![CDATA[Choose the images folders to compress]]></translation>
 			</item>
 			<item type="message" name="AuthenticateAtTinyPNG">
 				<translation language="nl"><![CDATA[Koppel uw TinyPNG account]]></translation>

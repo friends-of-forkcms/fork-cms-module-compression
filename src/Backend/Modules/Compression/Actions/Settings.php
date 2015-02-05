@@ -37,6 +37,18 @@ class Settings extends BackendBaseActionEdit
     private $frmApiKey;
     private $frmCompressionSettings;
 
+    /**
+     * The saved directories from the database
+     *
+     * @var Array
+     */
+    private $savedDirectories;
+
+    /**
+     * The generated directory tree in html
+     *
+     * @var String
+     */
     private $directoryTreeHtml;
 
     /**
@@ -53,14 +65,15 @@ class Settings extends BackendBaseActionEdit
     /**
      * Get the api key
      */
-    private function getCompressionParameters() {
+    private function getCompressionParameters()
+    {
         $remove = $this->getParameter('remove');
 
         // something has to be removed before proceeding
         if (!empty($remove)) {
             // the session token has te be removed
             if ($remove == 'api_key') {
-                BackendModel::setModuleSetting($this->getModule(), 'api_key', null );
+                BackendModel::setModuleSetting($this->getModule(), 'api_key', null);
             }
 
             // account was deleted, so redirect
@@ -75,15 +88,21 @@ class Settings extends BackendBaseActionEdit
      */
     private function loadCompressionSettingsForm()
     {
+        // create compression folder form
         $this->frmCompressionSettings = new BackendForm('compressionSettings');
         $this->frmCompressionSettings->addHidden('dummy_folders');
+
+        // get saved folders
+        $this->savedDirectories = BackendCompressionModel::getAllFolders();
+
+        // build directory tree
         $this->directoryTreeHtml = $this->BuildDirectoryTreeHtml(FRONTEND_FILES_PATH);
 
         // use POST values to rebuild the folders
         $this->folders = array();
-        if($this->frmCompressionSettings->isSubmitted()) {
-            if(isset($_POST['folders']) && is_array($_POST['folders'])) {
-                foreach($_POST['folders'] as $folder) {
+        if ($this->frmCompressionSettings->isSubmitted()) {
+            if (isset($_POST['folders']) && is_array($_POST['folders'])) {
+                foreach ($_POST['folders'] as $folder) {
                     $this->folders[] = array(
                         'path' => '/' . (string) $folder,
                         'created_on' => BackendModel::getUTCDate()
@@ -97,31 +116,45 @@ class Settings extends BackendBaseActionEdit
 
     /**
      * Build a directory tree in html list
-     * Based on: https://stackoverflow.com/questions/24121723/multidimensional-directory-list-with-recursive-iterator
      *
-     * @param string $folder_path
-     * @param int $depth
+     * @param string $folder_path The root folder path
+     * @param int $depth The recursive depth
      *
-     * @return string Html directory tree
+     * @return string A directory tree in HTML
      */
     public function BuildDirectoryTreeHtml($folder_path = '', $depth = 0)
     {
         $iterator = new \IteratorIterator(new \DirectoryIterator($folder_path));
 
-        $r = "<ul>";
+        $r = '<ul>';
 
         foreach ($iterator as $splFileInfo) {
-
             if ($splFileInfo->isDot()) {
                 continue;
             }
 
-            // is we have a directory, try and get its children
+            // if we have a directory, try and get its children
             if ($splFileInfo->isDir()) {
-                $r .= "<li>";
+                // Compare the path of this directory with the path of the directories saved in the database. Check the folder if they match.
+                $checkFolder = false;
+                foreach ($this->savedDirectories as $dbDirectory) {
+                    $currentFolderPath = str_replace(str_replace('/app/..', '', FRONTEND_FILES_PATH), '', $splFileInfo->getRealPath());
+                    if ($dbDirectory['path'] == $currentFolderPath) {
+                        $checkFolder = true;
+                        break;
+                    }
+                }
 
+                if ($checkFolder) {
+                    $r .= '<li class=\"checked\">';
+                } else {
+                    $r .= '<li>';
+                }
+
+                // Add the filename to the li element
                 $r .= $splFileInfo->getFilename();
 
+                // get the nodes
                 $nodes = $this->BuildDirectoryTreeHtml($splFileInfo->getPathname(), $depth + 1);
 
                 // only add the nodes if we have some
@@ -129,33 +162,29 @@ class Settings extends BackendBaseActionEdit
                     $r .= $nodes;
                 }
 
-                $r .= "</li>";
+                $r .= '</li>';
             }
-
         }
 
-        $r .= "</ul>";
+        $r .= '</ul>';
 
         return $r;
     }
 
     /**
-     * Validates the tracking url form.
+     * Validates the compression settings form.
      */
     private function validateCompressionSettingsForm()
     {
         if ($this->frmCompressionSettings->isSubmitted()) {
             if ($this->frmCompressionSettings->isCorrect()) {
-
                 $this->frmCompressionSettings->cleanupFields();
 
                 // validate fields
-                if($this->frmCompressionSettings->isCorrect()) {
-
+                if ($this->frmCompressionSettings->isCorrect()) {
                     // insert the folders
                     BackendCompressionModel::insertFolders($this->folders);
                 }
-
 
                 BackendModel::triggerEvent($this->getModule(), 'after_saved_settings');
                 $this->redirect(BackendModel::createURLForAction('Settings') . '&report=saved');
@@ -170,14 +199,16 @@ class Settings extends BackendBaseActionEdit
     {
         parent::parse();
 
+        // Add jsTree plugin
         $this->header->addJS('jstree.min.js', $this->getModule(), false, false);
         $this->header->addCSS('jstree/style.min.css', $this->getModule(), false, false);
 
+        // Show the API key form if we don't have one set
         if (!isset($this->apiKey)) {
             $this->tpl->assign('NoApiKey', true);
             $this->tpl->assign('Wizard', true);
 
-            // create form
+            // create api key form
             $this->frmApiKey = new BackendForm('apiKey');
             $this->frmApiKey->addText('key', $this->apiKey);
 
@@ -196,7 +227,7 @@ class Settings extends BackendBaseActionEdit
 
             $this->frmApiKey->parse($this->tpl);
         } else {
-            // show the linked account
+            // show the settings form
             $this->tpl->assign('EverythingIsPresent', true);
 
             $this->loadCompressionSettingsForm();

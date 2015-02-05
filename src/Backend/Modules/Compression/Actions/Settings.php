@@ -14,6 +14,7 @@ use Backend\Core\Engine\Model as BackendModel;
 use Backend\Core\Engine\Form as BackendForm;
 use Backend\Core\Engine\Language as BL;
 use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
+use Symfony\Component\Finder\Finder;
 
 /**
  * This is the settings-action, it will display a form to set general compression settings
@@ -153,6 +154,15 @@ class Settings extends BackendBaseActionEdit
 
                 // Add the filename to the li element
                 $r .= $splFileInfo->getFilename();
+
+                // Add the folder count
+                $finder = new Finder();
+                $folderCount = $finder
+                    ->files()
+                    ->name('/\.(jpg|jpeg|png)$/i')
+                    ->in($splFileInfo->getRealPath())
+                    ->count();
+                $r .= ' (' . $folderCount . ')';
 
                 // get the nodes
                 $nodes = $this->BuildDirectoryTreeHtml($splFileInfo->getPathname(), $depth + 1);

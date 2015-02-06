@@ -16,4 +16,7 @@
 	</authors>
 	<events>
 	</events>
+	<cronjobs>
+		<cronjob minute="33" hour="0" day-of-month="*" month="*" day-of-week="*" action="CompressImages"><![CDATA[Compresses the images from the folders you've selected]]></cronjob>
+	</cronjobs>
 </module>

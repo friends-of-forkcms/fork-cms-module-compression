@@ -192,8 +192,7 @@ class Settings extends BackendBaseActionEdit
 
                 // validate fields
                 if ($this->frmCompressionSettings->isCorrect()) {
-
-                    if(!empty($this->folders)) {
+                    if (!empty($this->folders)) {
                         // insert the folders
                         BackendCompressionModel::insertFolders($this->folders);
                     }

@@ -50,7 +50,7 @@ class CompressImages extends BackendBaseCronjob
         $output = 'Compressing ' . count($this->images) . ' images...' . "<br />\r\n";
         BackendCompressionModel::writeToCacheFile($output, true);
 
-        foreach($this->images as $image) {
+        foreach ($this->images as $image) {
             BackendCompressionModel::compressImage($this->apiKey, $image);
         }
 

@@ -33,11 +33,11 @@ class Model
         );
     }
 
-	/**
-	 * Insert the checked folders and their path
-	 *
-	 * @param $folders Array folders array
-	 */
+    /**
+     * Insert the checked folders and their path
+     *
+     * @param $folders Array folders array
+     */
     public static function insertFolders($folders)
     {
         // get db
@@ -62,7 +62,7 @@ class Model
         $fs = new Filesystem();
         $output = "";
 
-        if($overwrite) {
+        if ($overwrite) {
             $output = $data;
         } else {
             $output = self::readCacheFile();
@@ -99,7 +99,7 @@ class Model
         $file = BACKEND_CACHE_PATH . '/Compression/output.log';
         $cacheFile = "";
 
-        if($fs->exists($file)) {
+        if ($fs->exists($file)) {
             $cacheFile = file_get_contents(BACKEND_CACHE_PATH . '/Compression/output.log');
         }
 

@@ -19,16 +19,18 @@ use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
  */
 class ConsoleErase extends BackendBaseAJAXAction
 {
-	/**
-	 * Execute the action
-	 */
-	public function execute()
-	{
-		parent::execute();
+    /**
+     * Execute the action
+     */
+    public function execute()
+    {
+        parent::execute();
 
-		$overwrite = (boolean) \SpoonFilter::getPostValue('overwrite', null, '');
-		if($overwrite) BackendCompressionModel::writeToCacheFile("");
+        $overwrite = (boolean) \SpoonFilter::getPostValue('overwrite', null, '');
+        if ($overwrite) {
+            BackendCompressionModel::writeToCacheFile("");
+        }
 
-		$this->output(self::OK);
-	}
+        $this->output(self::OK);
+    }
 }

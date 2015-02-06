@@ -55,7 +55,24 @@
 				{$directoryTree}
 			</div>
 			{$hidDummyFolders}
+		</div>
+	</div>
 
+	<div class="box">
+		<div class="heading">
+			<h3>{$lblConsole|ucfirst}</h3>
+		</div>
+		<div class="options">
+			<label for="console">{$lblConsole|ucfirst}</label>
+			<textarea id="console" name="rss_description" cols="62" rows="10" readonly class="textarea" style="width: 100%; "></textarea>
+			<span class="helpTxt">{$msgConsole}</span>
+
+			{*<div id="console" style="height: 150px; background-color: #EAEAEA; padding: 10px; display: block; "></div>*}
+		</div>
+		<div class="options">
+			<div class="buttonHolder">
+				<a id="console-btn" class="button mainButton" href="#">{$lblExecute|ucfirst}</a>
+			</div>
 		</div>
 	</div>
 

@@ -105,7 +105,7 @@ class Settings extends BackendBaseActionEdit
             if (isset($_POST['folders']) && is_array($_POST['folders'])) {
                 foreach ($_POST['folders'] as $folder) {
                     $this->folders[] = array(
-                        'path' => '/' . (string) $folder,
+                        'path' => (string) $folder,
                         'created_on' => BackendModel::getUTCDate()
                     );
                 }
@@ -138,8 +138,8 @@ class Settings extends BackendBaseActionEdit
             if ($splFileInfo->isDir()) {
                 // Compare the path of this directory with the path of the directories saved in the database. Check the folder if they match.
                 $checkFolder = false;
+                $currentFolderPath = str_replace(str_replace('/app/..', '', FRONTEND_FILES_PATH), '', $splFileInfo->getRealPath());
                 foreach ($this->savedDirectories as $dbDirectory) {
-                    $currentFolderPath = str_replace(str_replace('/app/..', '', FRONTEND_FILES_PATH), '', $splFileInfo->getRealPath());
                     if ($dbDirectory['path'] == $currentFolderPath) {
                         $checkFolder = true;
                         break;
@@ -147,9 +147,9 @@ class Settings extends BackendBaseActionEdit
                 }
 
                 if ($checkFolder) {
-                    $r .= '<li class=\"checked\">';
+                    $r .= '<li class="checked" data-path="' . $currentFolderPath . '">';
                 } else {
-                    $r .= '<li>';
+                    $r .= '<li data-path="' . $currentFolderPath . '">';
                 }
 
                 // Add the filename to the li element
@@ -192,8 +192,11 @@ class Settings extends BackendBaseActionEdit
 
                 // validate fields
                 if ($this->frmCompressionSettings->isCorrect()) {
-                    // insert the folders
-                    BackendCompressionModel::insertFolders($this->folders);
+
+                    if(!empty($this->folders)) {
+                        // insert the folders
+                        BackendCompressionModel::insertFolders($this->folders);
+                    }
                 }
 
                 BackendModel::triggerEvent($this->getModule(), 'after_saved_settings');

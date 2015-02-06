@@ -3,10 +3,10 @@
 	<name>Compression</name>
 	<version>1.0.0</version>
 	<requirements>
-		<minimum_version>versionname</minimum_version>
+		<minimum_version>3.7</minimum_version>
 	</requirements>
 	<description>
-		<![CDATA[Compression module to compress images]]>
+		<![CDATA[Compress images used on your Fork CMS website with the free TinyPNG and TinyJPG service. You'll get compressed images in return: smaller filesize without visual differences, resulting in faster pageload times!]]>
 	</description>
 	<authors>
 		<author>

@@ -10,6 +10,10 @@ CREATE TABLE `compression_history` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `filename` varchar(255) NOT NULL DEFAULT '',
   `folder_path` varchar(255) NOT NULL DEFAULT '',
+  `original_size` int(11) DEFAULT NULL,
+  `compressed_size` int(11) DEFAULT NULL,
+  `saved_bytes` int(11) DEFAULT NULL,
+  `saved_percentage` int(11) DEFAULT NULL,
   `compressed_on` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

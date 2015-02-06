@@ -12,7 +12,7 @@ namespace Backend\Modules\Compression;
 use Backend\Core\Engine\Base\Config as BaseConfig;
 
 /**
- * This is the configuration-object for the Menu module
+ * This is the configuration-object for the Compressor module
  *
  * @author Jesse Dobbelaere <jesse@dobbelaere-ae.be>
  */

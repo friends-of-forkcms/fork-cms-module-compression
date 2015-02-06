@@ -46,8 +46,18 @@ class CompressImages extends BackendBaseCronjob
         // Get data from db
         $this->getData();
 
-        // Compress images
-        $this->compressImages();
+        // Compress each image from each folder
+        $output = 'Compressing ' . count($this->images) . ' images...' . "<br />\r\n";
+        BackendCompressionModel::writeToCacheFile($output, true);
+
+        foreach($this->images as $image) {
+            BackendCompressionModel::compressImage($this->apiKey, $image);
+        }
+
+        BackendCompressionModel::writeToCacheFile("...Done!");
+
+        $output = BackendCompressionModel::readCacheFile();
+        print($output);
     }
 
     /**
@@ -81,60 +91,6 @@ class CompressImages extends BackendBaseCronjob
                     'full_path' => $file->getRealpath(),
                     'file_size_original' => $file->getSize()
                 );
-            }
-        }
-    }
-
-    /**
-     * Compress the images from the selected folders. Send them to the TinyPNG api.
-     */
-    private function compressImages()
-    {
-        print('Compressing ' . count($this->images) . ' images...' . "<br />\r\n");
-
-        foreach ($this->images as $image) {
-            $request = curl_init();
-            curl_setopt_array($request, array(
-                CURLOPT_URL => 'https://api.tinypng.com/shrink',
-                CURLOPT_USERPWD => 'api:' . $this->apiKey,
-                CURLOPT_POSTFIELDS => file_get_contents($image['full_path']),
-                CURLOPT_BINARYTRANSFER => true,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HEADER => true,
-                /* Uncomment below if you have trouble validating our SSL certificate.
-                   Download cacert.pem from: http://curl.haxx.se/ca/cacert.pem */
-                // CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
-                CURLOPT_SSL_VERIFYPEER => true
-            ));
-
-            $response = curl_exec($request);
-            if (curl_getinfo($request, CURLINFO_HTTP_CODE) === 201) {
-                /* Compression was successful, retrieve output from Location header. */
-                $headers = substr($response, 0, curl_getinfo($request, CURLINFO_HEADER_SIZE));
-                foreach (explode("\r\n", $headers) as $header) {
-                    if (substr($header, 0, 10) === 'Location: ') {
-                        $request = curl_init();
-                        curl_setopt_array($request, array(
-                            CURLOPT_URL => substr($header, 10),
-                            CURLOPT_RETURNTRANSFER => true,
-                            /* Uncomment below if you have trouble validating our SSL certificate. */
-                            // CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
-                            CURLOPT_SSL_VERIFYPEER => true
-                        ));
-                        file_put_contents($image['full_path'], curl_exec($request));
-                    }
-                }
-
-                $imageInfo = new \SplFileInfo($image['full_path']);
-                $image['file_size_compressed'] = $imageInfo->getSize();
-                $image['saved_bytes'] = (int) $image['file_size_original'] - (int) $image['file_size_compressed'];
-                $image['saved_percentage'] = (int) ($image['saved_bytes'] / $image['file_size_original'] * 100);
-
-                print('Compression succesful for image ' . $image['filename'] . '. Saved ' . number_format($image['saved_bytes'] / 1024, 2) . ' KB' . ' bytes. (' . $image['saved_percentage'] . '%)' . "<br />\r\n");
-            } else {
-                // Something went wrong
-                print(curl_error($request));
-                print('Compression failed for image ' . $image . "<br />\r\n");
             }
         }
     }

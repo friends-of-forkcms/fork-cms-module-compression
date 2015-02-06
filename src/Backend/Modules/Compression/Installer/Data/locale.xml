@@ -57,6 +57,14 @@
 				<translation language="nl"><![CDATA[Kies de mappen]]></translation>
 				<translation language="en"><![CDATA[Choose the images folders to compress]]></translation>
 			</item>
+			<item type="label" name="Console">
+				<translation language="nl"><![CDATA[Console]]></translation>
+				<translation language="en"><![CDATA[Console]]></translation>
+			</item>
+			<item type="message" name="Console">
+				<translation language="nl"><![CDATA[Voer het comprimeer script uit en bekijk de output in het console scherm, of stel een cronjob in.]]></translation>
+				<translation language="en"><![CDATA[Execute the image compressor script and see the output in the console, or configure a cronjob.]]></translation>
+			</item>
 			<item type="message" name="AuthenticateAtTinyPNG">
 				<translation language="nl"><![CDATA[Koppel uw TinyPNG account]]></translation>
 				<translation language="en"><![CDATA[Link your TinyPNG account]]></translation>

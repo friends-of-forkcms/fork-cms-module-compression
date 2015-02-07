@@ -138,7 +138,8 @@ class Settings extends BackendBaseActionEdit
             if ($splFileInfo->isDir()) {
                 // Compare the path of this directory with the path of the directories saved in the database. Check the folder if they match.
                 $checkFolder = false;
-                $currentFolderPath = str_replace(str_replace('/app/..', '', FRONTEND_FILES_PATH), '', $splFileInfo->getRealPath());
+                $currentFolderPath = $splFileInfo->getRealPath();
+
                 foreach ($this->savedDirectories as $dbDirectory) {
                     if ($dbDirectory['path'] == $currentFolderPath) {
                         $checkFolder = true;

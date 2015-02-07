@@ -81,7 +81,7 @@ class StartCompression extends BackendBaseAJAXAction
             $iterator = $finder
                 ->files()
                 ->name('/\.(jpg|jpeg|png)$/i')
-                ->in(FRONTEND_FILES_PATH . $folder['path']);
+                ->in($folder['path']);
 
             foreach ($iterator as $file) {
                 $this->images[] = array(

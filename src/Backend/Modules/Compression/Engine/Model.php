@@ -121,7 +121,7 @@ class Model
             CURLOPT_HEADER => true,
             /* Uncomment below if you have trouble validating our SSL certificate.
                Download cacert.pem from: http://curl.haxx.se/ca/cacert.pem */
-            // CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
+            CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
             CURLOPT_SSL_VERIFYPEER => true
         ));
 
@@ -136,7 +136,7 @@ class Model
                         CURLOPT_URL => substr($header, 10),
                         CURLOPT_RETURNTRANSFER => true,
                         /* Uncomment below if you have trouble validating our SSL certificate. */
-                        // CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
+                        CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
                         CURLOPT_SSL_VERIFYPEER => true
                     ));
                     file_put_contents($image['full_path'], curl_exec($request));

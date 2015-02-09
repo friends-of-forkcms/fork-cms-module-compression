@@ -16,7 +16,7 @@ final class Config extends BaseConfig
      *
      * @var string
      */
-    protected $defaultAction = 'Index';
+    protected $defaultAction = 'Settings';
 
     /**
      * The disabled actions

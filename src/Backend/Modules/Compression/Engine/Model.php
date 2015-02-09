@@ -44,6 +44,40 @@ class Model
     }
 
     /**
+     * Insert information about the compressed image
+     *
+     * @param $imageInfo Array The info about the compressed image
+     */
+    public static function insertImageHistory($imageInfo, $fileCompressedBefore)
+    {
+        $db = BackendModel::getContainer()->get('database');
+
+        // Update status of previous record(s)
+        if ($fileCompressedBefore) {
+            $db->update('compression_history', array('status' => 'archived'), 'path = ?', $imageInfo['path']);
+        }
+
+        $db->insert('compression_history', $imageInfo);
+    }
+
+    /**
+     * Find an image record in the history table
+     *
+     * @param $image_path String The image path
+     */
+    public static function getImageHistory($image_path)
+    {
+        $db = BackendModel::getContainer()->get('database');
+        $record = $db->getRecord(
+            'SELECT i.id, i.path, i.compressed_size, i.checksum_hash
+            FROM compression_history AS i
+            WHERE i.path = ? AND i.status = ?',
+            array($image_path, 'active')
+        );
+        return $record;
+    }
+
+    /**
      * Write a message to the compression cache output file.
      *
      * @param $data String The message
@@ -67,7 +101,6 @@ class Model
             $output
         );
     }
-
 
     /**
      * Remove all cache files
@@ -100,67 +133,61 @@ class Model
     }
 
     /**
-     * Compress an image. Send them to the TinyPNG api and save it back.
+     * Get the array of uncompressed images from all the watched folders.
+     *
+     * @return array List of uncompressed folders from selected folders
      */
-    public static function compressImage($apiKey, $image)
+    public static function getImagesFromFolders()
     {
-        $request = curl_init();
-        curl_setopt_array($request, array(
-            CURLOPT_URL => 'https://api.tinypng.com/shrink',
-            CURLOPT_USERPWD => 'api:' . $apiKey,
-            CURLOPT_POSTFIELDS => file_get_contents($image['full_path']),
-            CURLOPT_BINARYTRANSFER => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => true,
-            /* Uncomment below if you have trouble validating our SSL certificate.
-               Download cacert.pem from: http://curl.haxx.se/ca/cacert.pem */
-            CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
-            CURLOPT_SSL_VERIFYPEER => true
-        ));
+        // The images array
+        $images = array();
 
-        $response = curl_exec($request);
-        if (curl_getinfo($request, CURLINFO_HTTP_CODE) === 201) {
-            /* Compression was successful, retrieve output from Location header. */
-            $headers = substr($response, 0, curl_getinfo($request, CURLINFO_HEADER_SIZE));
-            foreach (explode("\r\n", $headers) as $header) {
-                if (substr($header, 0, 10) === 'Location: ') {
-                    $request = curl_init();
-                    curl_setopt_array($request, array(
-                        CURLOPT_URL => substr($header, 10),
-                        CURLOPT_RETURNTRANSFER => true,
-                        /* Uncomment below if you have trouble validating our SSL certificate. */
-                        CURLOPT_CAINFO => __DIR__ . "/cacert.pem",
-                        CURLOPT_SSL_VERIFYPEER => true
-                    ));
-                    file_put_contents($image['full_path'], curl_exec($request));
+        // Get data from db
+        $folders = self::getAllFolders();
+
+        // Select all the jpg & png images inside the folder and add them to the images array
+        foreach ($folders as $folder) {
+            $finder = new Finder();
+            $iterator = $finder
+                ->files()
+                ->name('/\.(jpg|jpeg|png)$/i')
+                ->in($folder['path']);
+
+            foreach ($iterator as $file) {
+                $addImage = false;
+                $compressedBefore = false;
+
+                // Find an existing record in the image history records
+                $imageRecord = self::getImageHistory($file->getRealPath());
+
+                // Check if the file has been compressed before and thus exists in the db
+                if ($imageRecord) {
+                    // Check if file size is still the same
+                    if ($file->getSize() == $imageRecord['compressed_size']) {
+                        // Check if checksum hash is different
+                        if (sha1_file($file->getRealPath()) != $imageRecord['checksum_hash']) {
+                            $addImage = true;
+                        }
+                    } else {
+                        $addImage = true;
+                    }
+
+                    $compressedBefore = true;
+                } else {
+                    $addImage = true;
+                }
+
+                if ($addImage) {
+                    $images[] = array(
+                        'filename' => $file->getFilename(),
+                        'full_path' => $file->getRealpath(),
+                        'file_size_original' => $file->getSize(),
+                        'file_compressed_before' => $compressedBefore
+                    );
                 }
             }
-
-            // Get statistics
-            $imageInfo = new \SplFileInfo($image['full_path']);
-            $image['file_size_compressed'] = $imageInfo->getSize();
-            $image['saved_bytes'] = (int) $image['file_size_original'] - (int) $image['file_size_compressed'];
-            $image['saved_percentage'] = (int) ($image['saved_bytes'] / $image['file_size_original'] * 100);
-            $image['path'] = str_replace($image['filename'], '', str_replace(str_replace('/app/..', '', FRONTEND_FILES_PATH), '', $image['full_path']));
-
-            $output = 'Compression succesful for image ' . $image['filename'] . '. Saved ' . number_format($image['saved_bytes'] / 1024, 2) . ' KB' . ' bytes. (' . $image['saved_percentage'] . '%)';
-            self::writeToCacheFile($output);
-
-            // get db
-            $db = BackendModel::getContainer()->get('database');
-            $db->insert('compression_history', array(
-                'filename' => $image['filename'],
-                'folder_path' => $image['path'],
-                'original_size' => $image['file_size_original'],
-                'compressed_size' => $image['file_size_compressed'],
-                'saved_bytes' => $image['saved_bytes'],
-                'saved_percentage' => $image['saved_percentage'],
-                'compressed_on' => BackendModel::getUTCDate()
-            ));
-        } else {
-            // Something went wrong!
-            self::writeToCacheFile(curl_error($request));
-            self::writeToCacheFile('Compression failed for image ' . $image . "\r\n");
         }
+
+        return $images;
     }
 }

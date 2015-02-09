@@ -5,6 +5,7 @@ namespace Backend\Modules\Compression\Ajax;
 use Backend\Core\Engine\Base\AjaxAction as BackendBaseAJAXAction;
 use Backend\Core\Engine\Model as BackendModel;
 use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
+use Backend\Modules\Compression\Engine\TinyPNGApi;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -35,54 +36,49 @@ class StartCompression extends BackendBaseAJAXAction
     {
         parent::execute();
 
-        // Get data from db
-        $this->getData();
-
-        // Compress each image from each folder
-        $output = 'Compressing ' . count($this->images) . ' images...' . "\r\n";
-        BackendCompressionModel::writeToCacheFile($output, true);
-
-        foreach ($this->images as $image) {
-            BackendCompressionModel::compressImage($this->apiKey, $image);
-        }
-
-        BackendCompressionModel::writeToCacheFile("...Done!");
-
-        $this->output(self::OK);
-    }
-
-    /**
-     * Get the api key and the array containing all the images to be compressed.
-     *
-     * @throws \SpoonException
-     */
-    private function getData()
-    {
         // Get api key
         $this->apiKey = BackendModel::getModuleSetting($this->getModule(), 'api_key', null);
 
-        if (!isset($this->apiKey)) {
-            throw new \SpoonException('API Key is missing');
-        }
+        // Get uncompressed images list
+        $this->images = BackendCompressionModel::getImagesFromFolders();
 
-        // Get data from db
-        $folders = BackendCompressionModel::getAllFolders();
+        if (!empty($this->images)) {
+            // Compress each image from each folder
+            BackendCompressionModel::writeToCacheFile('Compressing ' . count($this->images) . ' images...' . "\r\n", true);
 
-        // Select all the jpg & png images inside the folder and add them to the images array
-        foreach ($folders as $folder) {
-            $finder = new Finder();
-            $iterator = $finder
-                ->files()
-                ->name('/\.(jpg|jpeg|png)$/i')
-                ->in($folder['path']);
+            foreach ($this->images as $image) {
+                $tinyPNGApi = new TinyPNGApi($this->apiKey);
 
-            foreach ($iterator as $file) {
-                $this->images[] = array(
-                    'filename' => $file->getFilename(),
-                    'full_path' => $file->getRealpath(),
-                    'file_size_original' => $file->getSize()
-                );
+                // Shrink the image and check if succesful
+                if ($tinyPNGApi->shrink($image['full_path'])) {
+                    // Check if the file was successfully downloaded.
+                    if ($tinyPNGApi->download($image['full_path'])) {
+                        $output = 'Compression succesful for image ' . $image['filename'] . '. Saved ' . number_format($tinyPNGApi->getSavingSize() / 1024, 2) . ' KB' . ' bytes. (' . $tinyPNGApi->getSavingPercentage() . '%)';
+                        BackendCompressionModel::writeToCacheFile($output);
+
+                        // Save to db
+                        $imageInfo = array(
+                            'filename' => $image['filename'],
+                            'path' => $image['full_path'],
+                            'original_size' => $tinyPNGApi->getInputSize(),
+                            'compressed_size' => $tinyPNGApi->getOutputSize(),
+                            'saved_bytes' => $tinyPNGApi->getSavingSize(),
+                            'saved_percentage' => $tinyPNGApi->getSavingPercentage(),
+                            'checksum_hash' => sha1_file($image['full_path']),
+                            'compressed_on' => BackendModel::getUTCDate()
+                        );
+                        BackendCompressionModel::insertImageHistory($imageInfo, $image['file_compressed_before']);
+                    }
+                } else {
+                    BackendCompressionModel::writeToCacheFile($tinyPNGApi->getErrorMessage());
+                }
             }
+
+            BackendCompressionModel::writeToCacheFile("...Done!");
+        } else {
+            BackendCompressionModel::writeToCacheFile("There are no images that can be compressed.", true);
         }
+
+        $this->output(self::OK);
     }
 }

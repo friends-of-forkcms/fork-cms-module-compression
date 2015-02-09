@@ -162,13 +162,8 @@ class Model
 
                 // Check if the file has been compressed before and thus exists in the db
                 if ($imageRecord) {
-                    // Check if file size is still the same
-                    if ($file->getSize() == $imageRecord['compressed_size']) {
-                        // Check if checksum hash is different
-                        if (sha1_file($file->getRealPath()) != $imageRecord['checksum_hash']) {
-                            $addImage = true;
-                        }
-                    } else {
+                    // Check if checksum hash is different (file has changed)
+                    if (sha1_file($file->getRealPath()) != $imageRecord['checksum_hash']) {
                         $addImage = true;
                     }
 

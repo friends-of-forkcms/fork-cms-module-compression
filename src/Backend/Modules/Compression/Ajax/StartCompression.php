@@ -53,7 +53,7 @@ class StartCompression extends BackendBaseAJAXAction
                 if ($tinyPNGApi->shrink($image['full_path'])) {
                     // Check if the file was successfully downloaded.
                     if ($tinyPNGApi->download($image['full_path'])) {
-                        $output = 'Compression succesful for image ' . $image['filename'] . '. Saved ' . number_format($tinyPNGApi->getSavingSize() / 1024, 2) . ' KB' . ' bytes. (' . $tinyPNGApi->getSavingPercentage() . '%)';
+                        $output = 'Compression succesful for image ' . $image['filename'] . '. Saved ' . number_format($tinyPNGApi->getSavingSize() / 1024, 2) . ' KB. (' . $tinyPNGApi->getSavingPercentage() . '%)';
                         BackendCompressionModel::writeToCacheFile($output);
 
                         // Save to db

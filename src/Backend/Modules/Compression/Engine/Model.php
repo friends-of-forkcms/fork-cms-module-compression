@@ -39,8 +39,11 @@ class Model
         // delete all records first
         $db->delete('compression_folders', null);
 
+        // Remove duplicate paths
+        $foldersWithoutDup = array_map("unserialize", array_unique(array_map("serialize", $folders)));
+
         // Insert folders
-        $db->insert('compression_folders', $folders);
+        $db->insert('compression_folders', $foldersWithoutDup);
     }
 
     /**
@@ -151,6 +154,7 @@ class Model
             $iterator = $finder
                 ->files()
                 ->name('/\.(jpg|jpeg|png)$/i')
+                ->depth('== 0')
                 ->in($folder['path']);
 
             foreach ($iterator as $file) {

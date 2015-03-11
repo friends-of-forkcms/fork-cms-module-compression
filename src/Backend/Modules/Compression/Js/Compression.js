@@ -23,21 +23,10 @@ jsBackend.compression =
 
 		// Init jstree
 		$tree.jstree({
+			"checkbox" : {
+				"tie_selection" : false
+			},
 			"plugins": ["checkbox"]
-		});
-
-		// Listen for events
-		$tree.on('changed.jstree', function (e, data) {
-			var $selectedNodes = $tree.jstree(true).get_bottom_checked();
-
-			var $allFolders = [];
-			for (var i=0; i < $selectedNodes.length; i++) {
-				var $path = $tree.jstree(true).get_node($selectedNodes[i]).data.path;
-				$allFolders.push($path);
-			}
-
-			// Save the folders to html
-			jsBackend.compression.save($allFolders);
 		});
 
 		// Check the checkboxes that have class "checked" on page load
@@ -46,11 +35,51 @@ jsBackend.compression =
 
 			if ($this.prop("li_attr")) {
 				var $listAttribute = $this[0].li_attr;
+
 				if ($listAttribute.class) {
-					$tree.jstree(true).select_node(i);
+					if($listAttribute.class == "checked") {
+						$tree.jstree(true).check_node(i);
+					}
 				}
 			}
 		});
+
+		function addAllFolders(data) {
+			var $selectedNodes = $tree.jstree(true).get_checked(true);
+
+			var $allFolders = [];
+			for (var i=0; i < $selectedNodes.length; i++) {
+				var $path = $tree.jstree(true).get_node($selectedNodes[i]).data.path;
+				$allFolders.push($path);
+
+				if (typeof data.node  !== "undefined") {
+					var $parents = data.node.parents;
+
+					for (var j=0; j < $parents.length-1; j++) {
+						var $parent = $tree.jstree(true).get_node($parents[j]).data.path;
+						$allFolders.push($parent);
+					}
+				}
+
+			}
+
+			console.log($allFolders);
+
+			// Save the folders to html
+			jsBackend.compression.save($allFolders);
+		}
+
+		// Listen for events
+		$tree.on('check_node.jstree', function (e, data) {
+			addAllFolders(data);
+		});
+
+		// Listen for events
+		$tree.on('uncheck_node.jstree', function (e, data) {
+			addAllFolders(data);
+		});
+
+
 	},
 
 	/**

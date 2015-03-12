@@ -1,12 +1,13 @@
 # README
 
 ## Description
-The Fork CMS Compression module let's you compress PNG & JPG images on your website. Use this module to shrink images on your site so they will use **less bandwidth and load faster**. The compression module uses the free API of [TinyPNG](https://tinypng.com/) and [TinyJPG](https://tinyjpg.com/).
+The Fork CMS Compression module let's you compress PNG & JPG images on your website. Use this module to shrink images on your site so they will use **less bandwidth and your website will load faster**. The compression module uses the free API of [TinyPNG](https://tinypng.com/) and [TinyJPG](https://tinyjpg.com/).
 
 ## Preview
-Backend:
+Backend + statistics:
 
-[ ![Image](http://i.imgur.com/ZRE1LX8m.png "Backend") ](http://i.imgur.com/ZRE1LX8.png) 
+[ ![Image](http://i.imgur.com/ZRE1LX8m.png "Backend") ](http://i.imgur.com/ZRE1LX8.png)   
+[ ![Image](http://i.imgur.com/neSqanxm.png "Statistics") ](http://i.imgur.com/neSqanx.png) 
 
 You can see an example/walkthrough video [here](http://quick.as/wjreh4dm)
 

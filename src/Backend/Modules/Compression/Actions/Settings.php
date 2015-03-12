@@ -135,19 +135,20 @@ class Settings extends BackendBaseActionEdit
 
                 foreach ($this->savedDirectories as $dbDirectory) {
                     if ($dbDirectory['path'] == $currentFolderPath) {
-
                         // Only check if it's the deepest child. Create new array with only path's.
                         // Search possible child path in other directory paths. If it doesn't match, then it's unique and no parent.
                         $check = true;
-                        foreach($this->savedDirectories as $dirs) {
-                            if($dbDirectory['path'] !== $dirs['path']) {
-                                if(stripos($dirs['path'], $dbDirectory['path']) !== false) {
+                        foreach ($this->savedDirectories as $dirs) {
+                            if ($dbDirectory['path'] !== $dirs['path']) {
+                                if (stripos($dirs['path'], $dbDirectory['path']) !== false) {
                                     $check = false;
                                     break;
                                 }
                             }
                         }
-                        if($check) $checkFolder = true;
+                        if ($check) {
+                            $checkFolder = true;
+                        }
                         break;
                     }
                 }

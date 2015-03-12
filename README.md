@@ -28,11 +28,6 @@ I did the test with 3 images (3264x2448 resolution) taken from my camera. I uplo
 3. Choose a few folders containing images to compress
 4. Use a cronjob if you want to compress these images once in a while, or press the execute button to compress the images on the fly.
 
-## To do
-
-* Statistics (how many bytes are saved thanks to the module?)
-* Option to overwrite or save a backup of the original images (e.g. with _backup suffix)
-
 ## Bugs
 
 If you encounter any bugs, please create an issue and I'll try to fix it (or feel free to fix it yourself with a pull-request).

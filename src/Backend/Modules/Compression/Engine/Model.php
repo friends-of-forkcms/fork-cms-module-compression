@@ -189,4 +189,19 @@ class Model
 
         return $images;
     }
+
+    /**
+     * Get some statistics about the compression, like the Weissman score™
+     *
+     * @return array Compression statistics
+     */
+    public static function getStatistics()
+    {
+        $db = BackendModel::getContainer()->get('database');
+
+        return $db->getRecord(
+            'SELECT COUNT(i.id) AS total_compressed, SUM(i.saved_bytes) AS saved_bytes,
+            concat(round(( 100 - (SUM(compressed_size) / SUM(original_size) * 100)),2),"%") AS saved_percentage
+            FROM compression_history AS i');
+    }
 }

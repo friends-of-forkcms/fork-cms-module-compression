@@ -1,0 +1,6 @@
+/*
+ * Dashboard widget
+ */
+#widgetCompressionStatistics .infoGrid th {
+	white-space: nowrap;
+}

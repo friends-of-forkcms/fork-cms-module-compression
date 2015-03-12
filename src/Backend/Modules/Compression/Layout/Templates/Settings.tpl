@@ -66,8 +66,6 @@
 			<label for="console">{$lblConsole|ucfirst}</label>
 			<textarea id="console" name="rss_description" cols="62" rows="10" readonly class="textarea" style="width: 100%; "></textarea>
 			<span class="helpTxt">{$msgConsole}</span>
-
-			{*<div id="console" style="height: 150px; background-color: #EAEAEA; padding: 10px; display: block; "></div>*}
 		</div>
 		<div class="options">
 			<div class="buttonHolder">
@@ -79,7 +77,6 @@
 	<div class="fullwidthOptions">
 		<div class="buttonHolderLeft">
 			<a href="{$var|geturl:'settings'}&amp;remove=api_key" data-message-id="confirmDeleteAccountLink" class="askConfirmation button inputButton"><span>{$msgRemoveAccountLink}</span></a>
-			{*{option:showAnalyticsIndex}<a href="{$var|geturl:'index'}" class="mainButton button"><span>{$lblViewStatistics|ucfirst}</span></a>{/option:showAnalyticsIndex}*}
 		</div>
 		<div class="buttonHolderRight">
 			<input id="save" class="inputButton button mainButton" type="submit" name="save" value="{$lblSave|ucfirst}" />

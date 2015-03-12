@@ -137,6 +137,27 @@
 				<translation language="nl"><![CDATA[Compressie]]></translation>
 				<translation language="en"><![CDATA[Compression]]></translation>
 			</item>
+
+			<item type="label" name="TotalCompressed">
+				<translation language="nl"><![CDATA[Aantal gecomprimeerd]]></translation>
+				<translation language="en"><![CDATA[Total compressed]]></translation>
+			</item>
+			<item type="label" name="SavedBytes">
+				<translation language="nl"><![CDATA[Aantal bytes uitgespaard]]></translation>
+				<translation language="en"><![CDATA[Saved bytes]]></translation>
+			</item>
+			<item type="label" name="SavedPercentage">
+				<translation language="nl"><![CDATA[Compressie percentage]]></translation>
+				<translation language="en"><![CDATA[Compression percentage]]></translation>
+			</item>
+			<item type="message" name="YouSavedPercentageImages">
+				<translation language="nl"><![CDATA[Uw afbeeldingen nemen nu <strong>%1$s</strong> minder plaats in!]]></translation>
+				<translation language="en"><![CDATA[Your images take up <strong>%1$s</strong> less space!]]></translation>
+			</item>
+			<item type="label" name="NoStatistics">
+				<translation language="nl"><![CDATA[Er zijn nog geen statistieken beschikbaar.]]></translation>
+				<translation language="en"><![CDATA[There are no statistics available yet.]]></translation>
+			</item>
 		</Core>
 	</Backend>
 	<Frontend>

@@ -63,7 +63,7 @@ jsBackend.compression =
 
 			}
 
-			console.log($allFolders);
+			//console.log($allFolders);
 
 			// Save the folders to html
 			jsBackend.compression.save($allFolders);

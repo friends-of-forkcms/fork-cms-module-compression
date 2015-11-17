@@ -11,6 +11,22 @@ use Backend\Core\Installer\ModuleInstaller;
  */
 class Installer extends ModuleInstaller
 {
+    /**
+     * Insert an empty admin dashboard sequence
+     */
+    private function insertWidget()
+    {
+        $compressionWidget = array(
+            'column' => 'middle',
+            'position' => 2,
+            'hidden' => false,
+            'present' => true
+        );
+
+        // insert the dashboardwidget
+        $this->insertDashboardWidget('Compression', 'Statistics', $compressionWidget);
+    }
+
     public function install()
     {
         // import the sql
@@ -32,5 +48,8 @@ class Installer extends ModuleInstaller
         $navigationSettingsId = $this->setNavigation(null, 'Settings');
         $navigationModulesId = $this->setNavigation($navigationSettingsId, 'Modules');
         $this->setNavigation($navigationModulesId, 'Compression', 'compression/settings');
+
+        // install dashboardwidget
+        $this->insertWidget();
     }
 }

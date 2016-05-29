@@ -4,6 +4,7 @@ namespace Backend\Modules\Compression\Ajax;
 
 use Backend\Core\Engine\Base\AjaxAction as BackendBaseAJAXAction;
 use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
+use SpoonFilter;
 
 /**
  * This is the console ajax action that will erase the cache file
@@ -19,9 +20,9 @@ class ConsoleErase extends BackendBaseAJAXAction
     {
         parent::execute();
 
-        $overwrite = (boolean) \SpoonFilter::getPostValue('overwrite', null, '');
+        $overwrite = (bool) SpoonFilter::getPostValue('overwrite', null, '');
         if ($overwrite) {
-            BackendCompressionModel::writeToCacheFile("");
+            BackendCompressionModel::writeToCacheFile('');
         }
 
         $this->output(self::OK);

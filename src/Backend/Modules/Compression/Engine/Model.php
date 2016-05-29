@@ -29,7 +29,7 @@ class Model
     /**
      * Insert the checked folders and their path
      *
-     * @param $folders Array folders array
+     * @param array $folders
      */
     public static function insertFolders($folders)
     {
@@ -49,7 +49,8 @@ class Model
     /**
      * Insert information about the compressed image
      *
-     * @param $imageInfo Array The info about the compressed image
+     * @param array $imageInfo The info about the compressed image
+     * @param bool $fileCompressedBefore
      */
     public static function insertImageHistory($imageInfo, $fileCompressedBefore)
     {
@@ -66,7 +67,8 @@ class Model
     /**
      * Find an image record in the history table
      *
-     * @param $image_path String The image path
+     * @param string $image_path The image path
+     * @return array
      */
     public static function getImageHistory($image_path)
     {
@@ -88,9 +90,7 @@ class Model
      */
     public static function writeToCacheFile($data, $overwrite = false)
     {
-        // store
         $fs = new Filesystem();
-        $output = "";
 
         if ($overwrite) {
             $output = $data;
@@ -99,10 +99,7 @@ class Model
             $output .= $data . "\r\n";
         }
 
-        $fs->dumpFile(
-            BACKEND_CACHE_PATH . '/Compression/output.log',
-            $output
-        );
+        $fs->dumpFile(BACKEND_CACHE_PATH . '/Compression/output.log', $output);
     }
 
     /**
@@ -112,6 +109,7 @@ class Model
     {
         $finder = new Finder();
         $fs = new Filesystem();
+
         foreach ($finder->files()->in(BACKEND_CACHE_PATH . '/Compression') as $file) {
             $fs->remove($file->getRealPath());
         }
@@ -200,8 +198,10 @@ class Model
         $db = BackendModel::getContainer()->get('database');
 
         return $db->getRecord(
-            'SELECT COUNT(i.id) AS total_compressed, SUM(i.saved_bytes) AS saved_bytes,
-            concat(round(( 100 - (SUM(compressed_size) / SUM(original_size) * 100)),2),"%") AS saved_percentage
+            'SELECT 
+                COUNT(i.id) AS total_compressed, 
+                SUM(i.saved_bytes) AS saved_bytes,
+                concat(round(( 100 - (SUM(compressed_size) / SUM(original_size) * 100)),2),"%") AS saved_percentage
             FROM compression_history AS i');
     }
 }

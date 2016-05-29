@@ -62,7 +62,7 @@ class TinyPNGApi
      * Method to shrink a PNG file with the TinyPNG-API.
      *
      * @param string $file The PNG file which will be shrinked by the TinyPNG-API.
-     * @return boolean The state if the PNG file was successfully shrinked.
+     * @return bool The state if the PNG file was successfully shrinked.
      */
     public function shrink($file)
     {
@@ -94,7 +94,7 @@ class TinyPNGApi
      * Method to download the result of the shrink method.
      *
      * @param string $file The file which the result will be saved.
-     * @return boolean The state if the file was successfully downloaded.
+     * @return bool The state if the file was successfully downloaded.
      */
     public function download($file)
     {

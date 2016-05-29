@@ -3,40 +3,52 @@
 namespace Backend\Modules\Compression\Actions;
 
 use Backend\Core\Engine\Base\ActionEdit as BackendBaseActionEdit;
+use Backend\Core\Engine\Language;
 use Backend\Core\Engine\Model as BackendModel;
 use Backend\Core\Engine\Form as BackendForm;
 use Backend\Core\Engine\Language as BL;
+use Backend\Modules\Compression\Engine\Helper;
 use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * This is the settings-action, it will display a form to set general compression settings
- *
+ * The Compression settings are able to define a TinyPNG api key and select folders to compress.
  * @author Jesse Dobbelaere <jesse@dobbelaere-ae.be>
  */
 class Settings extends BackendBaseActionEdit
 {
     /**
-     * API key needed by the API.
+     * TinyPNG API key.
      *
      * @var string
      */
     private $apiKey;
 
     /**
-     * The forms used on this page
+     * Api key form
      *
      * @var BackendForm
      */
     private $frmApiKey;
+
+    /**
+     * Compression module settingsform
+     *
+     * @var BackendForm
+     */
     private $frmCompressionSettings;
 
     /**
      * The saved directories from the database
      *
-     * @var Array
+     * @var array
      */
     private $savedDirectories;
+
+    /**
+     * @var array
+     */
+    private $folders;
 
     /**
      * The generated directory tree in html
@@ -44,6 +56,17 @@ class Settings extends BackendBaseActionEdit
      * @var String
      */
     private $directoryTreeHtml;
+
+    /**
+     * Settings constructor.
+     * @param KernelInterface $kernel
+     */
+    public function __construct(KernelInterface $kernel)
+    {
+        parent::__construct($kernel);
+        $this->savedDirectories = [];
+        $this->folders = [];
+    }
 
     /**
      * Execute the action
@@ -61,16 +84,16 @@ class Settings extends BackendBaseActionEdit
      */
     private function getCompressionParameters()
     {
-        $remove = $this->getParameter('remove');
+        $removeAction = $this->getParameter('remove');
 
-        // something has to be removed before proceeding
-        if (!empty($remove)) {
+        // We need to remove the api key
+        if (!empty($removeAction)) {
             // the session token has te be removed
-            if ($remove == 'api_key') {
+            if ($removeAction == 'api_key') {
                 $this->get('fork.settings')->set($this->getModule(), 'api_key', null);
             }
 
-            // account was deleted, so redirect
+            // TinyPNG account was unlinked, so redirect back.
             $this->redirect(BackendModel::createURLForAction('Settings') . '&report=deleted');
         }
 
@@ -78,21 +101,21 @@ class Settings extends BackendBaseActionEdit
     }
 
     /**
-     * Load settings form
+     * Load the compression settings form
      */
     private function loadCompressionSettingsForm()
     {
-        // create compression folder form
-        $this->frmCompressionSettings = new BackendForm('compressionSettings');
+        // Create compression folder form
+        $this->frmCompressionSettings = new BackendForm('compression');
         $this->frmCompressionSettings->addHidden('dummy_folders');
 
-        // get saved folders
+        // Get saved folders from the db
         $this->savedDirectories = BackendCompressionModel::getAllFolders();
 
-        // build directory tree
-        $this->directoryTreeHtml = $this->BuildDirectoryTreeHtml(FRONTEND_FILES_PATH);
+        // Build directory tree
+        $this->directoryTreeHtml = Helper::BuildDirectoryTreeHtml(FRONTEND_FILES_PATH, 0, $this->savedDirectories);
 
-        // use POST values to rebuild the folders
+        // Use POST values to rebuild the folders
         $this->folders = array();
         if ($this->frmCompressionSettings->isSubmitted()) {
             if (isset($_POST['folders']) && is_array($_POST['folders'])) {
@@ -104,88 +127,6 @@ class Settings extends BackendBaseActionEdit
                 }
             }
         }
-        $this->tpl->assign('folders', json_encode($this->folders));
-    }
-
-
-    /**
-     * Build a directory tree in html list
-     *
-     * @param string $folder_path The root folder path
-     * @param int $depth The recursive depth
-     *
-     * @return string A directory tree in HTML
-     */
-    public function BuildDirectoryTreeHtml($folder_path = '', $depth = 0)
-    {
-        $iterator = new \IteratorIterator(new \DirectoryIterator($folder_path));
-
-        $r = '<ul>';
-
-        foreach ($iterator as $splFileInfo) {
-            if ($splFileInfo->isDot()) {
-                continue;
-            }
-
-            // if we have a directory, try and get its children
-            if ($splFileInfo->isDir()) {
-                // Compare the path of this directory with the path of the directories saved in the database. Check the folder if they match.
-                $checkFolder = false;
-                $currentFolderPath = $splFileInfo->getRealPath();
-
-                foreach ($this->savedDirectories as $dbDirectory) {
-                    if ($dbDirectory['path'] == $currentFolderPath) {
-                        // Only check if it's the deepest child. Create new array with only path's.
-                        // Search possible child path in other directory paths. If it doesn't match, then it's unique and no parent.
-                        $check = true;
-                        foreach ($this->savedDirectories as $dirs) {
-                            if ($dbDirectory['path'] !== $dirs['path']) {
-                                if (stripos($dirs['path'], $dbDirectory['path']) !== false) {
-                                    $check = false;
-                                    break;
-                                }
-                            }
-                        }
-                        if ($check) {
-                            $checkFolder = true;
-                        }
-                        break;
-                    }
-                }
-
-                if ($checkFolder) {
-                    $r .= '<li class="checked" data-path="' . $currentFolderPath . '">';
-                } else {
-                    $r .= '<li data-path="' . $currentFolderPath . '">';
-                }
-
-                // Add the filename to the li element
-                $r .= $splFileInfo->getFilename();
-
-                // Add the folder count
-                $finder = new Finder();
-                $folderCount = $finder
-                    ->files()
-                    ->name('/\.(jpg|jpeg|png)$/i')
-                    ->in($splFileInfo->getRealPath())
-                    ->count();
-                $r .= ' (' . $folderCount . ')';
-
-                // get the nodes
-                $nodes = $this->BuildDirectoryTreeHtml($splFileInfo->getPathname(), $depth + 1);
-
-                // only add the nodes if we have some
-                if (!empty($nodes)) {
-                    $r .= $nodes;
-                }
-
-                $r .= '</li>';
-            }
-        }
-
-        $r .= '</ul>';
-
-        return $r;
     }
 
     /**
@@ -197,10 +138,10 @@ class Settings extends BackendBaseActionEdit
             if ($this->frmCompressionSettings->isCorrect()) {
                 $this->frmCompressionSettings->cleanupFields();
 
-                // validate fields
+                // Validate fields
                 if ($this->frmCompressionSettings->isCorrect()) {
                     if (!empty($this->folders)) {
-                        // insert the folders
+                        // Insert the folders
                         BackendCompressionModel::insertFolders($this->folders);
                     }
                 }
@@ -222,38 +163,37 @@ class Settings extends BackendBaseActionEdit
         $this->header->addJS('jstree.min.js', $this->getModule(), false, false);
         $this->header->addCSS('jstree/style.min.css', $this->getModule(), false, false);
 
-        // Show the API key form if we don't have one set
+        // Create api key form
         if (!isset($this->apiKey)) {
-            $this->tpl->assign('NoApiKey', true);
-            $this->tpl->assign('Wizard', true);
-
-            // create api key form
-            $this->frmApiKey = new BackendForm('apiKey');
-            $this->frmApiKey->addText('key', $this->apiKey);
+            $this->frmApiKey = new BackendForm('settings');
+            $this->frmApiKey->addText('key', $this->apiKey)->setAttribute('placeholder', Language::lbl('YourApiKey'));
 
             if ($this->frmApiKey->isSubmitted()) {
                 $this->frmApiKey->getField('key')->isFilled(BL::err('FieldIsRequired'));
 
                 if ($this->frmApiKey->isCorrect()) {
-                    $this->get('fork.settings')->set(
-                        $this->getModule(),
-                        'api_key',
-                        $this->frmApiKey->getField('key')->getValue()
-                    );
+                    $apikeyFieldValue = $this->frmApiKey->getField('key')->getValue();
+                    $this->get('fork.settings')->set($this->getModule(), 'api_key', $apikeyFieldValue);
                     $this->redirect(BackendModel::createURLForAction('Settings') . '&report=saved');
                 }
             }
 
+            // Parse the form into the template
             $this->frmApiKey->parse($this->tpl);
-        } else {
-            // show the settings form
-            $this->tpl->assign('EverythingIsPresent', true);
+        }
 
+        // Show the actual settings form
+        if (isset($this->apiKey)) {
             $this->loadCompressionSettingsForm();
             $this->tpl->assign('directoryTree', $this->directoryTreeHtml);
             $this->validateCompressionSettingsForm();
 
+            // Parse the form into the template
             $this->frmCompressionSettings->parse($this->tpl);
         }
+
+        // Show the API key form if we don't have one set
+        $this->tpl->assign('apiKey', $this->apiKey);
+        $this->tpl->assign('folders', array_merge($this->savedDirectories, $this->folders));
     }
 }

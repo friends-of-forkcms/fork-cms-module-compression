@@ -37,7 +37,7 @@ class CompressImages extends BackendBaseCronjob
         parent::execute();
 
         // Get api key
-        $this->apiKey = BackendModel::getModuleSetting($this->getModule(), 'api_key', null);
+        $this->apiKey = $this->get('fork.settings')->get($this->getModule(), 'api_key', null);
 
         // Get uncompressed images list
         $this->images = BackendCompressionModel::getImagesFromFolders();

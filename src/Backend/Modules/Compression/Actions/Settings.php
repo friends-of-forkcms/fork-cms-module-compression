@@ -67,14 +67,14 @@ class Settings extends BackendBaseActionEdit
         if (!empty($remove)) {
             // the session token has te be removed
             if ($remove == 'api_key') {
-                BackendModel::setModuleSetting($this->getModule(), 'api_key', null);
+                $this->get('fork.settings')->set($this->getModule(), 'api_key', null);
             }
 
             // account was deleted, so redirect
             $this->redirect(BackendModel::createURLForAction('Settings') . '&report=deleted');
         }
 
-        $this->apiKey = BackendModel::getModuleSetting($this->getModule(), 'api_key', null);
+        $this->apiKey = $this->get('fork.settings')->get($this->getModule(), 'api_key', null);
     }
 
     /**
@@ -235,7 +235,7 @@ class Settings extends BackendBaseActionEdit
                 $this->frmApiKey->getField('key')->isFilled(BL::err('FieldIsRequired'));
 
                 if ($this->frmApiKey->isCorrect()) {
-                    BackendModel::setModuleSetting(
+                    $this->get('fork.settings')->set(
                         $this->getModule(),
                         'api_key',
                         $this->frmApiKey->getField('key')->getValue()

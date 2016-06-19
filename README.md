@@ -6,12 +6,11 @@ The Fork CMS Compression module let's you compress PNG & JPG images on your webs
 ## Preview
 Backend + statistics:
 
-[ ![Image](http://i.imgur.com/ZRE1LX8m.png "Backend") ](http://i.imgur.com/ZRE1LX8.png)   
-[ ![Image](http://i.imgur.com/neSqanxm.png "Statistics") ](http://i.imgur.com/neSqanx.png) 
+[ ![Image](http://i.imgur.com/NvjmRHy.gif "Backend") ](http://i.imgur.com/NvjmRHy.gif)
 
-You can see an example/walkthrough video [here](http://quick.as/wjreh4dm)
+[ ![Image](http://i.imgur.com/pWGrfmem.png "Statistics") ](http://i.imgur.com/pWGrfme.png)
 
-I did the test with 3 images (3264x2448 resolution) taken from my camera. I uploaded and inserted the photos on a Fork CMS page and used the compression module. I went from 8.2MB to 1.5MB for the three images together! 
+I did the test with 3 images (3264x2448 resolution) taken from my camera. I uploaded and inserted the photos on a Fork CMS page and used the compression module. I went from 8.2MB to 1.5MB for the three images together!
 
 ## Installation
 
@@ -24,7 +23,7 @@ I did the test with 3 images (3264x2448 resolution) taken from my camera. I uplo
 
 1. Get a free API key (500 images/month for free) [here](https://tinypng.com/developers)
 2. Go to `Settings > Modules > Compression` and enter your API key
-3. In the tree structure, choose a few folders with images to compress. Press save. Then press the execute button to start compression. 
+3. In the tree structure, choose a few folders with images to compress. Press save. Then press the execute button to start compression.
 4. Use a cronjob if you want to compress these images once in a while, or press the execute button to compress the images on the fly.
 
 Note: We store a history of compressed files in the database with a checksum. By doing that, we can ignore files that already have been compressed and ignore them when a new compression task starts.

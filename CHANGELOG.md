@@ -1,5 +1,9 @@
+2.0.0 (2016-06-19)
+--
+* Upgrade to Fork CMS v4 with Twig template support
+
 1.2.0 (2015-03-12)
-—
+—-
 * Feature: add dashboard statistics widget
 * Bugfix: parent folder images are now compressed too
 

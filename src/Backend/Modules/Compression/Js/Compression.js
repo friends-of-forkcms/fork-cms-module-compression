@@ -126,7 +126,10 @@ jsBackend.compression =
             // Erase logfile and console first
             $.ajax({
                 data: {
-                    fork: { module: 'Compression', action: 'ConsoleErase' }
+                    fork: {
+                      module: 'Compression',
+                      action: 'ConsoleErase'
+                    }
                 },
                 success: function (result) {
                     if (result.code === 200) {

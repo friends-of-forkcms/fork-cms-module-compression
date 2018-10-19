@@ -4,7 +4,7 @@ namespace Backend\Modules\Compression\Ajax;
 
 use Backend\Core\Engine\Base\AjaxAction as BackendBaseAJAXAction;
 use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
-use SpoonFilter;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This is the console ajax action that will erase the cache file
@@ -16,15 +16,16 @@ class ConsoleErase extends BackendBaseAJAXAction
     /**
      * Execute the action
      */
-    public function execute()
+    public function execute(): void
     {
         parent::execute();
 
-        $overwrite = (bool) SpoonFilter::getPostValue('overwrite', null, '');
+        $overwrite = $this->getRequest()->request->get('overwrite', '');
         if ($overwrite) {
             BackendCompressionModel::writeToCacheFile('');
         }
 
-        $this->output(self::OK);
+        // output
+        $this->output(Response::HTTP_OK);
     }
 }

@@ -1,36 +1,37 @@
 <div id="widgetCompressionStatistics" class="panel panel-default">
-    <div class="panel-heading">
-        <h2 class="panel-title">
-            <a href="{{ geturl('settings', 'compression' ) }}">{{ 'lbl.Compression'|trans|ucfirst }}: {{ 'lbl.Statistics'|trans|ucfirst }}</a>
-        </h2>
-    </div>
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      <a href="{{ geturl('settings', 'compression' ) }}">{{ 'lbl.Compression'|trans|ucfirst }}
+        : {{ 'lbl.Statistics'|trans|ucfirst }}</a>
+    </h2>
+  </div>
 
-    <div class="panel-body">
-        {% if statistics.statistics_enable %}
-            <table class="table table-striped">
-                <tbody>
-                    <tr>
-                        <th>{{ 'lbl.TotalCompressed'|trans|ucfirst }}</th>
-                        <td>
-                            {{ statistics.total_compressed }} {{ 'lbl.Images'|trans|ucfirst }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>{{ 'lbl.SavedBytes'|trans|ucfirst }}:</th>
-                        <td>
-                            {{ statistics.saved_bytes }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>{{ 'lbl.SavedPercentage'|trans|ucfirst }}</th>
-                        <td>
-                            {{ 'msg.YouSavedPercentageImages'|trans|sprintf(statistics.saved_percentage) }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        {% else %}
-            <p>{{ 'lbl.NoStatistics'|trans }}</p>
-        {% endif %}
-    </div>
+  <div class="panel-body">
+    {% if statistics.statistics_enable %}
+      <table class="table table-striped">
+        <tbody>
+        <tr>
+          <th>{{ 'lbl.TotalCompressed'|trans|ucfirst }}</th>
+          <td>
+            {{ statistics.total_compressed }} {{ 'lbl.Images'|trans|ucfirst }}
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'lbl.SavedBytes'|trans|ucfirst }}:</th>
+          <td>
+            {{ statistics.saved_bytes }}
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'lbl.SavedPercentage'|trans|ucfirst }}</th>
+          <td>
+            {{ 'msg.YouSavedPercentageImages'|trans|format(statistics.saved_percentage)|raw }}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    {% else %}
+      <p>{{ 'lbl.NoStatistics'|trans }}</p>
+    {% endif %}
+  </div>
 </div>

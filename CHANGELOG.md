@@ -1,3 +1,7 @@
+3.0.0 (2018-10-19)
+--
+* Upgrade to Fork CMS v5 (minor tweaks so it works, no complete rewrite of the code)
+
 2.0.0 (2016-06-19)
 --
 * Upgrade to Fork CMS v4 with Twig template support

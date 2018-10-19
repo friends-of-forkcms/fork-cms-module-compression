@@ -6,7 +6,7 @@ use Backend\Core\Engine\Base\AjaxAction as BackendBaseAJAXAction;
 use Backend\Core\Engine\Model as BackendModel;
 use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
 use Backend\Modules\Compression\Engine\TinyPNGApi;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This is the console ajax action
@@ -32,7 +32,7 @@ class StartCompression extends BackendBaseAJAXAction
     /**
      * Execute the action
      */
-    public function execute()
+    public function execute(): void
     {
         parent::execute();
 
@@ -79,6 +79,7 @@ class StartCompression extends BackendBaseAJAXAction
             BackendCompressionModel::writeToCacheFile("There are no images that can be compressed.", true);
         }
 
-        $this->output(self::OK);
+        // output
+        $this->output(Response::HTTP_OK);
     }
 }

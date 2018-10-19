@@ -22,7 +22,7 @@ class Statistics extends BackendBaseWidget
     /**
      * Execute the widget
      */
-    public function execute()
+    public function execute(): void
     {
         $this->setColumn('right');
         $this->setPosition(1);
@@ -33,7 +33,7 @@ class Statistics extends BackendBaseWidget
     /**
      * Parse into template
      */
-    private function parse()
+    private function parse(): void
     {
         // Fetch statistics
         $statistics = BackendCompressionModel::getStatistics();
@@ -46,7 +46,7 @@ class Statistics extends BackendBaseWidget
 
         // Parse into template
         $this->header->addCSS('Compression.css', 'Compression');
-        $this->tpl->assign('statistics', $statistics);
+        $this->template->assign('statistics', $statistics);
     }
 
     /**
@@ -55,7 +55,7 @@ class Statistics extends BackendBaseWidget
      * @param $bytes
      * @return string
      */
-    private function formatSizeUnits($bytes)
+    private function formatSizeUnits($bytes): string
     {
         if ($bytes >= 1073741824) {
             $bytes = number_format($bytes / 1073741824, 2) . ' GB';

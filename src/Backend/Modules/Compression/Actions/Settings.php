@@ -3,10 +3,9 @@
 namespace Backend\Modules\Compression\Actions;
 
 use Backend\Core\Engine\Base\ActionEdit as BackendBaseActionEdit;
-use Backend\Core\Engine\Language;
+use Backend\Core\Language\Language as BL;
 use Backend\Core\Engine\Model as BackendModel;
 use Backend\Core\Engine\Form as BackendForm;
-use Backend\Core\Engine\Language as BL;
 use Backend\Modules\Compression\Engine\Helper;
 use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -71,7 +70,7 @@ class Settings extends BackendBaseActionEdit
     /**
      * Execute the action
      */
-    public function execute()
+    public function execute(): void
     {
         parent::execute();
         $this->getCompressionParameters();
@@ -82,9 +81,9 @@ class Settings extends BackendBaseActionEdit
     /**
      * Get the api key
      */
-    private function getCompressionParameters()
+    private function getCompressionParameters(): void
     {
-        $removeAction = $this->getParameter('remove');
+        $removeAction = $this->getRequest()->query->get('remove');
 
         // We need to remove the api key
         if (!empty($removeAction)) {
@@ -103,7 +102,7 @@ class Settings extends BackendBaseActionEdit
     /**
      * Load the compression settings form
      */
-    private function loadCompressionSettingsForm()
+    private function loadCompressionSettingsForm(): void
     {
         // Create compression folder form
         $this->frmCompressionSettings = new BackendForm('compression');
@@ -121,7 +120,7 @@ class Settings extends BackendBaseActionEdit
             if (isset($_POST['folders']) && is_array($_POST['folders'])) {
                 foreach ($_POST['folders'] as $folder) {
                     $this->folders[] = array(
-                        'path' => (string) $folder,
+                        'path' => (string)$folder,
                         'created_on' => BackendModel::getUTCDate()
                     );
                 }
@@ -132,7 +131,7 @@ class Settings extends BackendBaseActionEdit
     /**
      * Validates the compression settings form.
      */
-    private function validateCompressionSettingsForm()
+    private function validateCompressionSettingsForm(): void
     {
         if ($this->frmCompressionSettings->isSubmitted()) {
             if ($this->frmCompressionSettings->isCorrect()) {
@@ -145,8 +144,6 @@ class Settings extends BackendBaseActionEdit
                         BackendCompressionModel::insertFolders($this->folders);
                     }
                 }
-
-                BackendModel::triggerEvent($this->getModule(), 'after_saved_settings');
                 $this->redirect(BackendModel::createURLForAction('Settings') . '&report=saved');
             }
         }
@@ -155,7 +152,7 @@ class Settings extends BackendBaseActionEdit
     /**
      * Parse the form
      */
-    protected function parse()
+    protected function parse(): void
     {
         parent::parse();
 
@@ -166,7 +163,7 @@ class Settings extends BackendBaseActionEdit
         // Create api key form
         if (!isset($this->apiKey)) {
             $this->frmApiKey = new BackendForm('settings');
-            $this->frmApiKey->addText('key', $this->apiKey)->setAttribute('placeholder', Language::lbl('YourApiKey'));
+            $this->frmApiKey->addText('key', $this->apiKey)->setAttribute('placeholder', BL::lbl('YourApiKey'));
 
             if ($this->frmApiKey->isSubmitted()) {
                 $this->frmApiKey->getField('key')->isFilled(BL::err('FieldIsRequired'));
@@ -179,21 +176,21 @@ class Settings extends BackendBaseActionEdit
             }
 
             // Parse the form into the template
-            $this->frmApiKey->parse($this->tpl);
+            $this->frmApiKey->parse($this->template);
         }
 
         // Show the actual settings form
         if (isset($this->apiKey)) {
             $this->loadCompressionSettingsForm();
-            $this->tpl->assign('directoryTree', $this->directoryTreeHtml);
+            $this->template->assign('directoryTree', $this->directoryTreeHtml);
             $this->validateCompressionSettingsForm();
 
             // Parse the form into the template
-            $this->frmCompressionSettings->parse($this->tpl);
+            $this->frmCompressionSettings->parse($this->template);
         }
 
         // Show the API key form if we don't have one set
-        $this->tpl->assign('apiKey', $this->apiKey);
-        $this->tpl->assign('folders', array_merge($this->savedDirectories, $this->folders));
+        $this->template->assign('apiKey', $this->apiKey);
+        $this->template->assign('folders', array_merge($this->savedDirectories, $this->folders));
     }
 }

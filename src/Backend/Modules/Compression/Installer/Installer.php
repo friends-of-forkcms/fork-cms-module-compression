@@ -14,7 +14,7 @@ class Installer extends ModuleInstaller
     /**
      * Insert an empty admin dashboard sequence
      */
-    private function addDashboardWidget()
+    private function addDashboardWidget(): void
     {
         $compressionWidget = array(
             'column' => 'middle',
@@ -29,7 +29,7 @@ class Installer extends ModuleInstaller
     /**
      * Install the module
      */
-    public function install()
+    public function install(): void
     {
         $this->addModule('Compression');
 

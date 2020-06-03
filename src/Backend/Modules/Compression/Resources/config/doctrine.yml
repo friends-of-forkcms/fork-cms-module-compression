@@ -1,0 +1,15 @@
+doctrine:
+    orm:
+        mappings:
+            compression_history:
+                type: annotation
+                is_bundle: false
+                dir: "%kernel.project_dir%/src/Backend/Modules/Compression/Domain/CompressionHistory"
+                alias: CompressionHistory
+                prefix: Backend\Modules\Compression\Domain\CompressionHistory
+            compression_setting:
+                type: annotation
+                is_bundle: false
+                dir: "%kernel.project_dir%/src/Backend/Modules/Compression/Domain/CompressionSetting"
+                alias: CompressionSetting
+                prefix: Backend\Modules\Compression\Domain\CompressionSetting

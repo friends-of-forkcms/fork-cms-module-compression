@@ -1,0 +1,94 @@
+{% extends '/Layout/Templates/base.html.twig' %}
+{% import "Layout/Templates/macros.html.twig" as macro %}
+
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/react-checkbox-tree@1.5.1/lib/react-checkbox-tree.css" crossorigin="anonymous"/>
+
+  {# Run React/JSX in the browser without transpilation and packaging #}
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/react-checkbox-tree@1.5.1/lib/index.browser.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+  <script src="/src/Backend/Modules/Compression/Layout/Js/app.js" type="text/babel"></script>
+
+  <div class="row fork-module-content">
+    <div class="col-md-12">
+      <div>
+        <ul class="nav nav-tabs nav-tabs-flex" role="tablist">
+          <li role="presentation" class="active mr-auto">
+            <a href="#tabConfigure" aria-controls="tabConfigure" role="tab" data-toggle="tab">{{ 'lbl.Configure'|trans|ucfirst }}</a>
+          </li>
+          <li role="presentation">
+            <a href="#tabConsole" aria-controls="tabConsole" role="tab" data-toggle="tab">{{ 'lbl.Console'|trans|ucfirst }}</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+
+          {# Configure compressions panel #}
+          <div role="tabpanel" class="tab-pane active" id="tabConfigure">
+            {{ form_start(form) }}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  {{ 'lbl.FoldersToCompress'|trans|ucfirst }}
+                </h3>
+              </div>
+              <div class="panel-body">
+                <div class="form-group">
+                  {{ form_row(form.folders) }}
+
+                  <div id="compression-app"></div>
+                  <script>
+                    window.COMPRESSION_APP = {
+                      tree: {{ directoryTree|json_encode|raw }},
+                      selectedFolders: {{ selectedFolders|json_encode|raw }}
+                    }
+                  </script>
+                </div>
+
+                {{ form_rest(form) }}
+              </div>
+            </div>
+
+            <div class="btn-toolbar">
+              <div class="btn-group pull-right" role="group">
+                {{ macro.buttonIcon('', 'floppy-o', 'lbl.Save'|trans|ucfirst, 'btn-primary', {"type":"submit", "name":"save", "id":"save"}) }}
+              </div>
+            </div>
+
+            {{ form_end(form) }}
+          </div>
+
+
+          {# Console compressions panel #}
+          <div role="tabpanel" class="tab-pane" id="tabConsole">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  {{ 'lbl.Console'|trans|ucfirst }}
+                </h3>
+              </div>
+
+              <div class="panel-body">
+                <div class="form-group">
+                  <textarea id="js-compression-console" cols="62" rows="10" readonly class="textarea" style="width: 100%; "></textarea>
+                  <span class="help-block">{{ 'msg.Console'|trans }}</span>
+                </div>
+
+                <div class="btn-toolbar">
+                  <div class="btn-group pull-left" role="group">
+                    <button id="js-btn-console" type="submit" name="process" class="btn btn-primary">
+                      <span class="fa fa-cog"></span>{{ 'lbl.Execute'|trans|ucfirst }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

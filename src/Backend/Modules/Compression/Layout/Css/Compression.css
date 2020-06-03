@@ -2,36 +2,42 @@
  * Dashboard widget
  */
 #widgetCompressionStatistics .infoGrid th {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
-/* Rotating animation button */
-@-webkit-keyframes rotate {
-	from {
-		-webkit-transform: rotate(0deg);
-	}
-	to {
-		-webkit-transform: rotate(360deg);
-	}
+/**
+  * Settings
+ */
+.usage {
+    font-weight: bold;
+    display: inline-block;
+    font-size: 1.6rem;
 }
-@keyframes rotate {
-	from {
-		-webkit-transform: rotate(0deg);
-	}
-	to {
-		-webkit-transform: rotate(360deg);
-	}
+.usage__counter--free {
+    color: #8cc938
 }
 
-.btn-processing {
-	-webkit-animation-name: rotate;
-	animation-name: rotate;
-	-webkit-animation-duration: 1.5s;
-	animation-duration: 1.5s;
-	-webkit-animation-iteration-count: infinite;
-	animation-iteration-count: infinite;
-	-webkit-animation-timing-function: linear;
-	animation-timing-function: linear;
-	-webkit-transform-origin: 33% 51%;
-	transform-origin: 33% 51%;
+.usage__counter--full {
+    color: #ff5244
+}
+
+/**
+ * Folder tree
+ */
+.react-checkbox-tree label {
+    font-weight: 400;
+    font-size: 14px;
+}
+
+/**
+ * Console tab
+ */
+#js-compression-console {
+    font-size: 13px;
+    word-break: break-all;
+    word-wrap: break-word;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    padding: 1rem;
+    background-color: #111;
+    color: #00d600;
 }

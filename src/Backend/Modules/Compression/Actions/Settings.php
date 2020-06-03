@@ -1,196 +1,69 @@
 <?php
+declare(strict_types=1);
 
 namespace Backend\Modules\Compression\Actions;
 
-use Backend\Core\Engine\Base\ActionEdit as BackendBaseActionEdit;
-use Backend\Core\Language\Language as BL;
-use Backend\Core\Engine\Model as BackendModel;
-use Backend\Core\Engine\Form as BackendForm;
-use Backend\Modules\Compression\Engine\Helper;
-use Backend\Modules\Compression\Engine\Model as BackendCompressionModel;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Backend\Core\Engine\Base\ActionIndex;
+use Backend\Core\Engine\Model;
+use Backend\Modules\Compression\Domain\Settings\Command\SaveSettings;
+use Backend\Modules\Compression\Domain\Settings\Event\SettingsSavedEvent;
+use Backend\Modules\Compression\Domain\Settings\SettingsType;
+use Backend\Modules\Compression\Exception\ValidateResponseErrorException;
+use Backend\Modules\Compression\Http\TinyPngApiClient;
+use Symfony\Component\Form\Form;
 
-/**
- * The Compression settings are able to define a TinyPNG api key and select folders to compress.
- * @author Jesse Dobbelaere <jesse@dobbelaere-ae.be>
- */
-class Settings extends BackendBaseActionEdit
+final class Settings extends ActionIndex
 {
-    /**
-     * TinyPNG API key.
-     *
-     * @var string
-     */
-    private $apiKey;
-
-    /**
-     * Api key form
-     *
-     * @var BackendForm
-     */
-    private $frmApiKey;
-
-    /**
-     * Compression module settingsform
-     *
-     * @var BackendForm
-     */
-    private $frmCompressionSettings;
-
-    /**
-     * The saved directories from the database
-     *
-     * @var array
-     */
-    private $savedDirectories;
-
-    /**
-     * @var array
-     */
-    private $folders;
-
-    /**
-     * The generated directory tree in html
-     *
-     * @var String
-     */
-    private $directoryTreeHtml;
-
-    /**
-     * Settings constructor.
-     * @param KernelInterface $kernel
-     */
-    public function __construct(KernelInterface $kernel)
-    {
-        parent::__construct($kernel);
-        $this->savedDirectories = [];
-        $this->folders = [];
-    }
-
-    /**
-     * Execute the action
-     */
     public function execute(): void
     {
         parent::execute();
-        $this->getCompressionParameters();
-        $this->parse();
-        $this->display();
-    }
 
-    /**
-     * Get the api key
-     */
-    private function getCompressionParameters(): void
-    {
-        $removeAction = $this->getRequest()->query->get('remove');
+        $form = $this->getForm();
 
-        // We need to remove the api key
-        if (!empty($removeAction)) {
-            // the session token has te be removed
-            if ($removeAction == 'api_key') {
-                $this->get('fork.settings')->set($this->getModule(), 'api_key', null);
-            }
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            $this->template->assign('form', $form->createView());
 
-            // TinyPNG account was unlinked, so redirect back.
-            $this->redirect(BackendModel::createURLForAction('Settings') . '&report=deleted');
-        }
-
-        $this->apiKey = $this->get('fork.settings')->get($this->getModule(), 'api_key', null);
-    }
-
-    /**
-     * Load the compression settings form
-     */
-    private function loadCompressionSettingsForm(): void
-    {
-        // Create compression folder form
-        $this->frmCompressionSettings = new BackendForm('compression');
-        $this->frmCompressionSettings->addHidden('dummy_folders');
-
-        // Get saved folders from the db
-        $this->savedDirectories = BackendCompressionModel::getAllFolders();
-
-        // Build directory tree
-        $this->directoryTreeHtml = Helper::BuildDirectoryTreeHtml(FRONTEND_FILES_PATH, 0, $this->savedDirectories);
-
-        // Use POST values to rebuild the folders
-        $this->folders = array();
-        if ($this->frmCompressionSettings->isSubmitted()) {
-            if (isset($_POST['folders']) && is_array($_POST['folders'])) {
-                foreach ($_POST['folders'] as $folder) {
-                    $this->folders[] = array(
-                        'path' => (string)$folder,
-                        'created_on' => BackendModel::getUTCDate()
+            if ($this->get('fork.settings')->get($this->getModule(), 'api_key')) {
+                try {
+                    $client = TinyPngApiClient::createFromModuleSettings($this->get('fork.settings'));
+                    $this->template->assign('monthlyCompressionCount', $client->getMonthlyCompressionCount());
+                } catch (ValidateResponseErrorException $e) {
+                    $this->get('fork.settings')->delete($this->getModule(), 'api_key');
+                    $this->redirect(
+                        Model::createUrlForAction('Settings', $this->getModule(), null, ['error' => 'invalid-api-key'])
                     );
                 }
             }
+
+            $this->parse();
+            $this->display();
+
+            return;
         }
+
+        $settings = $this->saveSettings($form);
+        $this->get('event_dispatcher')->dispatch(SettingsSavedEvent::EVENT_NAME, new SettingsSavedEvent($settings));
+
+        $this->redirect(Model::createUrlForAction('Ping', $this->getModule(), null, ['report' => 'saved']));
     }
 
-    /**
-     * Validates the compression settings form.
-     */
-    private function validateCompressionSettingsForm(): void
+    private function getForm(): Form
     {
-        if ($this->frmCompressionSettings->isSubmitted()) {
-            if ($this->frmCompressionSettings->isCorrect()) {
-                $this->frmCompressionSettings->cleanupFields();
+        $form = $this->createForm(
+            SettingsType::class,
+            new SaveSettings($this->get('fork.settings'))
+        );
 
-                // Validate fields
-                if ($this->frmCompressionSettings->isCorrect()) {
-                    if (!empty($this->folders)) {
-                        // Insert the folders
-                        BackendCompressionModel::insertFolders($this->folders);
-                    }
-                }
-                $this->redirect(BackendModel::createURLForAction('Settings') . '&report=saved');
-            }
-        }
+        $form->handleRequest($this->getRequest());
+        return $form;
     }
 
-    /**
-     * Parse the form
-     */
-    protected function parse(): void
+    private function saveSettings(Form $form): SaveSettings
     {
-        parent::parse();
+        /** @var SaveSettings $settings */
+        $settings = $form->getData();
+        $this->get('command_bus')->handle($settings);
 
-        // Add jsTree plugin
-        $this->header->addJS('jstree.min.js', $this->getModule(), false, false);
-        $this->header->addCSS('jstree/style.min.css', $this->getModule(), false, false);
-
-        // Create api key form
-        if (!isset($this->apiKey)) {
-            $this->frmApiKey = new BackendForm('settings');
-            $this->frmApiKey->addText('key', $this->apiKey)->setAttribute('placeholder', BL::lbl('YourApiKey'));
-
-            if ($this->frmApiKey->isSubmitted()) {
-                $this->frmApiKey->getField('key')->isFilled(BL::err('FieldIsRequired'));
-
-                if ($this->frmApiKey->isCorrect()) {
-                    $apikeyFieldValue = $this->frmApiKey->getField('key')->getValue();
-                    $this->get('fork.settings')->set($this->getModule(), 'api_key', $apikeyFieldValue);
-                    $this->redirect(BackendModel::createURLForAction('Settings') . '&report=saved');
-                }
-            }
-
-            // Parse the form into the template
-            $this->frmApiKey->parse($this->template);
-        }
-
-        // Show the actual settings form
-        if (isset($this->apiKey)) {
-            $this->loadCompressionSettingsForm();
-            $this->template->assign('directoryTree', $this->directoryTreeHtml);
-            $this->validateCompressionSettingsForm();
-
-            // Parse the form into the template
-            $this->frmCompressionSettings->parse($this->template);
-        }
-
-        // Show the API key form if we don't have one set
-        $this->template->assign('apiKey', $this->apiKey);
-        $this->template->assign('folders', array_merge($this->savedDirectories, $this->folders));
+        return $settings;
     }
 }

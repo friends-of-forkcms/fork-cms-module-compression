@@ -1,0 +1,14 @@
+{
+  "input": {
+    "size": 761862,
+    "type": "image/jpeg"
+  },
+  "output": {
+    "size": 371526,
+    "type": "image/jpeg",
+    "width": 2880,
+    "height": 1800,
+    "ratio": 0.4877,
+    "url": "https://api.tinify.com/output/8ty7hdmn0ep3xdc5bp0p2mmnymynufv1"
+  }
+}

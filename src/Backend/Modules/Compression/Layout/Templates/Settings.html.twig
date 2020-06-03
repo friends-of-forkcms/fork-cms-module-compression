@@ -1,127 +1,47 @@
 {% extends '/Layout/Templates/base.html.twig' %}
+{% import 'Layout/Templates/macros.html.twig' as macro %}
 
 {% block content %}
-  {% if apiKey is empty or folders is empty %}
-    <div class="row fork-module-messages">
-      <div class="col-md-12">
-        <div class="alert alert-warning" role="alert">
-          <p><strong><span class="fa fa-exclamation-triangle"></span> {{ 'msg.ConfigurationError'|trans }}</strong></p>
-          <ul class="pb0">
-            {% if not apiKey %}
-              <li>{{ 'err.NoApiKey'|trans }}</li>{% endif %}
-            {% if apiKey and folders is empty %}
-              <li>{{ 'err.NoFoldersSet'|trans }}</li>{% endif %}
-          </ul>
+  {{ form_start(form) }}
+  <div class="row fork-module-content">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            {{ 'lbl.Settings'|trans|capitalize }}
+          </h3>
+        </div>
+
+        <div class="panel-body">
+          <div class="form-group">
+            {{ 'msg.LinkTinyPNGAccount'|trans|raw }}
+          </div>
+
+          <div class="form-group">
+            {{ form_row(form.apiKey) }}
+          </div>
+
+          {% if monthlyCompressionCount is not null %}
+            <div class="usage">
+              {{ 'msg.TotalMonthlyUsage'|trans }}:
+              <span class="{% if monthlyCompressionCount < 500 %}usage__counter--free{% else %}usage__counter--full{% endif %}">{{ monthlyCompressionCount }}</span> / 500
+            </div>
+          {% endif %}
+
+          {{ form_rest(form) }}
         </div>
       </div>
     </div>
-  {% endif %}
+  </div>
 
-  {# Step1 Wizard: ask for API key #}
-  {% if not apiKey %}
-    {% form settings %}
-      <div class="row fork-module-content">
-        <div class="col-md-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">
-                {{ 'lbl.TinyPNGLink'|trans|ucfirst }}
-              </h3>
-            </div>
-            <div class="panel-body">
-              <div class="form-group">
-                {{ 'msg.LinkTinyPNGAccount'|trans|raw }}
-              </div>
-
-              <div class="form-group">
-                <label for="apiKey" class="control-label">{{ 'lbl.ApiKey'|trans|ucfirst }}</label>
-                {% form_field_error key %} {% form_field key %}
-              </div>
-            </div>
-          </div>
+  <div class="row fork-module-actions">
+    <div class="col-md-12">
+      <div class="btn-toolbar">
+        <div class="btn-group pull-right" role="group">
+          {{ macro.buttonIcon('', 'link', 'lbl.AuthenticateWithTinyPNG'|trans|ucfirst, 'btn-primary', { "type":"submit", "id":"save", "name":"save"} ) }}
         </div>
       </div>
-
-      <div class="row fork-module-actions">
-        <div class="col-md-12">
-          <div class="btn-toolbar">
-            <div class="btn-group pull-right" role="group">
-              <button id="authenticate" type="submit" name="authenticate" class="btn btn-primary">
-                <span class="fa fa-link"></span>{{ 'lbl.AuthenticateWithTinyPNG'|trans|ucfirst }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endform %}
-  {% endif %}
-
-  {% if apiKey %}
-    {% form compression %}
-      <div class="row fork-module-content">
-        <div class="col-md-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">
-                {{ 'lbl.FoldersToCompress'|trans|ucfirst }}
-              </h3>
-            </div>
-            <div class="panel-body">
-              <div class="form-group jstree-wrapper">
-                <div class="js-tree-folders">
-                  {{ directoryTree|raw }}
-                </div>
-                {% form_field dummy_folders %}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row fork-module-content">
-        <div class="col-md-12">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">
-                {{ 'lbl.Console'|trans|ucfirst }}
-              </h3>
-            </div>
-
-            <div class="panel-body">
-              <div class="form-group">
-                <textarea name="rss_description" cols="62" rows="10" readonly class="textarea js-console" style="width: 100%; "></textarea>
-                <span class="help-block">{{ 'msg.Console'|trans }}</span>
-              </div>
-
-              <div class="btn-toolbar">
-                <div class="btn-group pull-left" role="group">
-                  <button type="submit" name="process" class="btn btn-info js-btn-console">
-                    <span class="fa fa-cog"></span>{{ 'lbl.Execute'|trans|ucfirst }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row fork-module-actions">
-        <div class="col-md-12">
-          <div class="btn-toolbar">
-            <div class="btn-group pull-left" role="group">
-              <a href="{{ geturl('settings') }}&amp;remove=api_key" data-message-id="confirmDeleteAccountLink"
-                 class="askConfirmation btn btn-danger btn-sm">
-                <span class="fa fa-chain-broken"></span>{{ 'msg.RemoveAccountLink'|trans }}
-              </a>
-            </div>
-            <div class="btn-group pull-right" role="group">
-              <button id="save" type="submit" name="save" class="btn btn-primary">
-                <span class="fa fa-floppy-o"></span>{{ 'lbl.Save'|trans|ucfirst }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endform %}
-  {% endif %}
+    </div>
+  </div>
+  {{ form_end(form) }}
 {% endblock %}

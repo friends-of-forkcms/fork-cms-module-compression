@@ -1,0 +1,13 @@
+services:
+    compression.repository.compression_setting:
+        class: Backend\Modules\Compression\Domain\CompressionSetting\CompressionSettingRepository
+        public: true
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - Backend\Modules\Compression\Domain\CompressionSetting\CompressionSetting
+    compression.repository.compression_history:
+        class: Backend\Modules\Compression\Domain\CompressionHistory\CompressionHistoryRepository
+        public: true
+        factory: ["@doctrine.orm.entity_manager", getRepository]
+        arguments:
+            - Backend\Modules\Compression\Domain\CompressionHistory\CompressionHistory

@@ -7,25 +7,25 @@
   </div>
 
   <div class="panel-body">
-    {% if statistics.statistics_enable %}
+    {% if statistics.totalCompressedImages > 0 %}
       <table class="table table-striped">
         <tbody>
         <tr>
           <th>{{ 'lbl.TotalCompressed'|trans|ucfirst }}</th>
           <td>
-            {{ statistics.total_compressed }} {{ 'lbl.Images'|trans|ucfirst }}
+            {{ statistics.totalCompressedImages }} {{ 'lbl.Images'|trans }}
           </td>
         </tr>
         <tr>
           <th>{{ 'lbl.SavedBytes'|trans|ucfirst }}:</th>
           <td>
-            {{ statistics.saved_bytes }}
+            {{ statistics.savedBytesFormatted }}
           </td>
         </tr>
         <tr>
           <th>{{ 'lbl.SavedPercentage'|trans|ucfirst }}</th>
           <td>
-            {{ 'msg.YouSavedPercentageImages'|trans|format(statistics.saved_percentage)|raw }}
+            {{ 'msg.YouSavedPercentageImages'|trans|format(statistics.savedPercentage)|raw }}
           </td>
         </tr>
         </tbody>

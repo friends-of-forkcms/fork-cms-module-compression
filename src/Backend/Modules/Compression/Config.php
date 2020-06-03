@@ -1,15 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Backend\Modules\Compression;
 
-use Backend\Core\Engine\Base\Config as BaseConfig;
+use Backend\Core\Engine\Base\Config as BackendBaseConfig;
 
-/**
- * This is the configuration-object for the Compressor module
- *
- * @author Jesse Dobbelaere <jesse@dobbelaere-ae.be>
- */
-final class Config extends BaseConfig
+final class Config extends BackendBaseConfig
 {
     /**
      * The default action
@@ -17,11 +13,4 @@ final class Config extends BaseConfig
      * @var string
      */
     protected $defaultAction = 'Settings';
-
-    /**
-     * The disabled actions
-     *
-     * @var array
-     */
-    protected $disabledActions = array();
 }

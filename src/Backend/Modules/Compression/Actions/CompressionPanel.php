@@ -78,7 +78,7 @@ final class CompressionPanel extends ActionIndex
     {
         $form = $this->createForm(
             CompressionSettingsType::class,
-            new UpdateCompressionSettings(),
+            new UpdateCompressionSettings()
         );
 
         $form->handleRequest($this->getRequest());

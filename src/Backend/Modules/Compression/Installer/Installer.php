@@ -44,7 +44,7 @@ class Installer extends ModuleInstaller
         $this->setNavigation(
             $navigationModulesId,
             $this->getModule(),
-            'compression/compression_panel',
+            'compression/compression_panel'
         );
     }
 

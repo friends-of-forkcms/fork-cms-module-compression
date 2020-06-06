@@ -1,0 +1,27 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          ref: "master"
+          fetch-depth: 0
+      - uses: oleksiyrudenko/gha-git-credentials@v1
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Release version
+        run: npx -p @release-it/bumper -p release-it release-it --verbose
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

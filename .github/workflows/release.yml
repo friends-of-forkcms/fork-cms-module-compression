@@ -22,6 +22,6 @@ jobs:
         with:
           node-version: 14
       - name: Release version
-        run: npx -p @release-it/bumper -p release-it release-it --verbose
+        run: npx -p @release-it/bumper -p release-it@13.6.2 release-it --verbose
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

@@ -43,7 +43,7 @@ If you encounter any bugs, please create an issue (or feel free to fix it yourse
 
 ## 🔖 Releases
 
-To release a new version: create a new release on Github, fill in the next patch/minor/major version as git tag and publish the release (without description). A [Github action](https://github.com/friends-of-forkcms/fork-cms-module-compression/blob/master/.github/workflows/release.yml) will take care of preparing release notes, `CHANGELOG.md` and `VERSION.md` bumps.
+To release a new version: go to Github Actions -> Run Workflow -> and fill in a release tag and hit "Run Workflow". A [Github action](https://github.com/friends-of-forkcms/fork-cms-module-compression/blob/master/.github/workflows/release.yml) will take care of preparing release notes, `CHANGELOG.md` and `VERSION.md` bumps.
 
 ## 💬 Discussion
 

@@ -1,6 +1,11 @@
 # Changelog
 
-## [4.0.1](https://github.com/friends-of-forkcms/fork-cms-module-compression/compare/4.0.0...4.0.1) (2020-06-06)
+## [4.0.2](https://github.com/friends-of-forkcms/fork-cms-module-compression/compare/4.0.1...4.0.2) (2020-07-21)
+
+- Release it trigger workflow [`#12`](https://github.com/friends-of-forkcms/fork-cms-module-compression/pull/12)
+- Lock release-it to specific version [`0771577`](https://github.com/friends-of-forkcms/fork-cms-module-compression/commit/0771577965300c1e40332ce9a0150a795b101ac3)
+
+## [4.0.1](https://github.com/friends-of-forkcms/fork-cms-module-compression/compare/4.0.0...4.0.1) (2020-06-09)
 
 - Bugfix : installer removed comma [`#10`](https://github.com/friends-of-forkcms/fork-cms-module-compression/pull/10)
 - Add support for release-it [`a6a7746`](https://github.com/friends-of-forkcms/fork-cms-module-compression/commit/a6a7746feecff8b5a71886a55252501bfc1550a1)
